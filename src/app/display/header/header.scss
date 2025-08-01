@@ -1,19 +1,13 @@
 @use "../../../styles/colors";
+@use "../../../styles/sizes";
 
-.headerOuter {
+.wrapper {
     background-color: colors.$headerBackground;
     width: 100%;
     height: fit-content;
     color: colors.$headerTextColor;
     box-shadow: 0px 10px 21px -2px colors.$shadowBlack;
-}
-
-h1 {
-    margin: auto;
-    padding: 10px;
-}
-
-h3 {
-    margin: auto;
-    padding: 10px;
+    text-align: center;
+    padding-top: sizes.$xs-size;
+    padding-bottom: sizes.$xs-size;
 }

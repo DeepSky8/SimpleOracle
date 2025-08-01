@@ -1,0 +1,12 @@
+<div class="wrapper">
+    <ul>
+        <li class="" *ngFor="let oracle of oracles">
+            <ng-container *ngComponentOutlet="
+            componentSelector(oracle);
+            inputs: {oracle}
+            " />
+        </li>
+
+    </ul>
+
+</div>

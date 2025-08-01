@@ -1,6 +1,24 @@
+$calcFontSizeTiny: calc(13px);
 $calcFontSizeSmall: calc(12px + 1vmin);
 $calcFontSize: calc(12px + 2vmin);
 $calcFontSizeMed: calc(12px + 3vmin);
 $calcFontSizeLarge: calc(12px + 4vmin);
 $calcFontSizeExtraLarge: calc(12px + 6vmin);
 
+// Sizes
+$xs-size: 0.6rem;
+$s-size: 1.2rem;
+$m-size: 1.6rem;
+$l-size: 3.2rem;
+$xl-size: 4.8rem;
+$xxl-size: 9.6rem;
+$card-height: 60rem;
+
+$spacer--mobile: $xs-size;
+$spacer--desktop: $l-size;
+
+// Breakpoints
+$tiny-breakpoint: 371px;
+$mobile-breakpoint: 425px;
+$medium-breakpoint: 540px;
+$desktop-breakpoint: 1025px;

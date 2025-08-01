@@ -1,11 +1,15 @@
+@use "sass:color";
 // $headerBackground: #4d4d4d;
 // $bodyBackground: #3c3c3c;
 
 $headerBackground: #242424;
 $headerTextColor: #e2ddc8;
 
-
-$bodyBackground: #242424;
+// $bodyBackground: color.adjust(#242424, $lightness: -2%);
+$bodyBackground: #252526;
 $bodyTextColor: #e2ddc8;
 
 $shadowBlack: black;
+
+$oracleOutline: #e2ddc8;
+$oracleBackground: #242424;

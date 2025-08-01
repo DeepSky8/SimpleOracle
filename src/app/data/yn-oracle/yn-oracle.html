@@ -1,0 +1,21 @@
+<button (click)="rollDice()">
+    <div class='textBox'>
+        <h2 class="spacer--tiny">{{oracle.title}}</h2>
+        <div *ngIf="rollPrimary>0" class="spacer--tiny">Rolled: {{rollPrimary}}</div>
+        <h3 *ngIf="descPrimary" class="spacer--tiny">"{{descPrimary}}"</h3>
+        <div *ngIf="descSecondary" class="spacer--med">{{descSecondary}}</div>
+        <ng-container class="twistBox" *ngIf="twistSubject">
+            <h3>PLOT TWIST!</h3>
+            <ng-container>{{twistSubject}} {{twistAction}}</ng-container>
+
+        </ng-container>
+        <ng-container>
+            <div *ngIf="descReminder" class="reminder">{{descReminder}}</div>
+        </ng-container>
+
+
+    </div>
+
+
+
+</button>
