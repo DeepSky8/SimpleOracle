@@ -77,8 +77,8 @@ export const oracles: IOracle[] = [
             [
                 [
                     // Entry Zero - only displayed during intro
-                    'Think of a question',
-                    "Select the likelihood",
+                    "Think of a 'Yes/No' question",
+                    "Evaluate the likelihood",
                     "Tap here to roll"
                 ],
                 [
@@ -102,7 +102,7 @@ export const oracles: IOracle[] = [
                 [
                     // Entry Four
                     'Yes, but...',
-                    "You suceed, but at a cost",
+                    "You succeed, but at a cost",
                     "A success with consequences that slow your progress"
                 ],
                 [
@@ -165,7 +165,7 @@ export const oracles: IOracle[] = [
                 ],
                 [
                     // Entry Three - Twist Die Actions
-                    'hinders', 'helps'
+                    'hinders you', 'helps you'
                 ],
                 [
                     // Entry Four - Twist Die Actions

@@ -1,5 +1,5 @@
 <div class="oracle--wrapper">
-    <div class='oracle--textBox'>
+    <div class='oracle--topBox'>
         <h2 class="oracle--spacer--tiny">{{oracle.title}}</h2>
 
         <div class="rollResults--wrapper oracle--spacer--tiny">
@@ -8,21 +8,21 @@
             </div>
         </div>
 
-        <h3 *ngIf="descPrimary" class="oracle--spacer--tiny">"{{descPrimary}}"</h3>
+        <h3 *ngIf="descPrimary" class="oracle--spacer--tiny">{{descPrimary}}</h3>
         <div *ngIf="descSecondary" class="oracle--spacer--tiny">{{descSecondary}}</div>
 
-        <div class="rollButtons--wrapper oracle--pin--bottom">
 
-            <div class="twistBox" *ngIf="twistSubject">
-                <h3>PLOT TWIST!</h3>
-                <ng-container>{{twistSubject}} {{twistAction}}</ng-container>
-            </div>
+    </div>
+    <div class="oracle--bottomBox">
 
-            <div *ngIf="descReminder" class="reminder--italic oracle--spacer--tiny">{{descReminder}}</div>
-            
-            <button class="rollButtons" (click)="rollDice(likely[1])" *ngFor="let likely of odds">{{likely[1]}}
-            </button>
+        <div class="twistBox" *ngIf="twistSubject">
+            <h3>PLOT TWIST!</h3>
+            <ng-container>{{twistSubject}} {{twistAction}}</ng-container>
         </div>
 
+        <div *ngIf="descReminder" class="reminder--italic oracle--spacer--tiny">{{descReminder}}</div>
+
+        <button class="rollButtons" (click)="rollDice(likely[1])" *ngFor="let likely of odds">{{likely[1]}}
+        </button>
     </div>
 </div>

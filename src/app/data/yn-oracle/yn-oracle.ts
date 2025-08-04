@@ -97,11 +97,11 @@ export class YnOracle extends Oracle {
         this.rollPrimary = tempPrimary
         this.rollSecondary = tempSecondary
 
-        this.descPrimary = this.oracle.table[0][tempSecondary][0]
-        this.descSecondary = this.oracle.table[0][tempSecondary][1]
-        this.descReminder = this.oracle.table[0][tempSecondary][2]
+        this.descPrimary = this.oracle.table[0][tempPrimary][0]
+        this.descSecondary = this.oracle.table[0][tempPrimary][1]
+        this.descReminder = this.oracle.table[0][tempPrimary][2]
 
-        this.evaluateTwist(tempSecondary)
+        this.evaluateTwist(tempPrimary)
         break;
       }
 
