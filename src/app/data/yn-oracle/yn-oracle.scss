@@ -1,11 +1,44 @@
 // @use "sass:color";
 // @use "../../../styles/colors";
-// @use "../../../styles/sizes";
+@use "../../../styles/sizes";
 
 .twistBox {
-    display: block;
+padding-bottom: sizes.$m-size;
 }
 
-// @media only screen and (min-device-width: sizes.$desktop-breakpoint) {
+.rollButtons--wrapper {
+    // display: flex;
+    // flex-wrap: wrap;
+    // justify-content: center;
+    width: 100%;
+    padding-top: sizes.$m-size;
+}
 
-// }
+.rollButtons {
+    width: 90%;
+}
+
+.reminder--italic {
+    font-style: italic;
+}
+
+.rollResults--wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.rollResults--text--spacer {
+    padding-left: 5px;
+}
+
+.rollResults--text--bold {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+@media only screen and (min-device-width: sizes.$desktop-breakpoint) {
+    .rollButtons {
+        width: 250px;
+    }
+}

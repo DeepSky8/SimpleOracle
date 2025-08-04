@@ -24,6 +24,8 @@ body {
     // height: 100%;
     // background-color: red;
     background-color: colors.$bodyBackground;
+    color: colors.$bodyTextColor;
+    font-size: sizes.$calcFontSize;
 }
 
 *,
@@ -31,7 +33,6 @@ body {
 *::after {
     box-sizing: border-box;
 }
-
 
 h1 {
     margin: auto;
@@ -45,11 +46,17 @@ h3 {
     margin: auto;
 }
 
+h4 {
+    margin: auto;
+}
+
 ul {
     list-style-type: none;
     padding: 0;
 }
 
-// @media only screen and (min-device-width: sizes.$desktop-breakpoint) {
-
-// }
+@media only screen and (min-device-width: sizes.$desktop-breakpoint) {
+    body {
+        font-size: sizes.$calcFontSizeSmall;
+    }
+}

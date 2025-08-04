@@ -1,0 +1,109 @@
+@use "sass:color";
+@use "./colors";
+@use "./sizes";
+
+.oracle--wrapper {
+    height: 525px;
+    width: 100%;
+    position: relative;
+
+    margin-bottom: sizes.$spacer--mobile;
+    color: colors.$bodyTextColor;
+    background-color: colors.$oracleBackground;
+
+    border-radius: 25px;
+    border: 1px solid colors.$oracleOutline;
+
+    box-shadow: 0px 10px 21px -2px colors.$shadowBlack;
+    display: inline-flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+button {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 600;
+    font-size: sizes.$calcFontSizeMed;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+
+    border-radius: 25px;
+    border: 1px solid colors.$oracleOutline;
+    box-shadow: 0px 10px 21px -2px colors.$shadowBlack;
+    margin-bottom: sizes.$spacer--mobile;
+    color: colors.$bodyTextColor;
+    background-color: colors.$oracleBackground;
+
+    // width: 90%;
+}
+
+button:hover {
+    background-color: color.adjust(colors.$oracleBackground, $lightness: -3%);
+    box-shadow: 0px 10px 10px -2px colors.$shadowBlack;
+}
+
+.oracle--textBox {
+    text-align: center;
+    width: 100%;
+}
+
+.oracle--reminder {
+    font-style: italic;
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    // width: 100%;
+}
+
+.oracle--pin--bottom {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.oracle--spacer--tiny {
+    padding-bottom: sizes.$xs-size;
+}
+
+.oracle--spacer--med {
+    padding-bottom: sizes.$m-size;
+}
+
+@media only screen and (min-device-width: sizes.$medium-breakpoint) {
+    .oracle--wrapper {
+        height: 650px;
+    }
+}
+
+@media only screen and (min-device-width: sizes.$tablet-breakpoint) {
+    .oracle--wrapper {
+        height: 700px;
+        width: 500px;
+    }
+}
+
+@media only screen and (min-device-width: sizes.$desktop-breakpoint) {
+    .oracle--wrapper {
+        height: 800px;
+        width: 500px;
+    }
+
+    button {
+        font-size: sizes.$calcFontSizeSmall;
+        margin: sizes.$spacer--mobile;
+    }
+}
+
+// iPad Air
+@media only screen and (device-width: 1180px) and (device-height: 820px) {
+    .oracle--wrapper {
+        height: 550px;
+        width: 500px;
+    }
+}

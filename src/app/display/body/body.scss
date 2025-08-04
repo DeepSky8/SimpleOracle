@@ -19,13 +19,23 @@ li {
     width: 100%;
 }
 
-@media only screen and (min-device-width: sizes.$desktop-breakpoint) {
+@media only screen and (min-device-width: sizes.$tablet-breakpoint) {
     ul {
         justify-content: space-evenly;
     }
+
     li {
         width: auto;
     }
+}
+
+@media only screen and (min-device-width: sizes.$desktop-breakpoint) {
+    // ul {
+    //     justify-content: space-evenly;
+    // }
+    // li {
+    //     width: auto;
+    // }
     .wrapper {
         padding: sizes.$spacer--desktop;
     }

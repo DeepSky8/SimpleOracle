@@ -1,21 +1,28 @@
-<button (click)="rollDice()">
-    <div class='textBox'>
-        <h2 class="spacer--tiny">{{oracle.title}}</h2>
-        <div *ngIf="rollPrimary>0" class="spacer--tiny">Rolled: {{rollPrimary}}</div>
-        <h3 *ngIf="descPrimary" class="spacer--tiny">"{{descPrimary}}"</h3>
-        <div *ngIf="descSecondary" class="spacer--med">{{descSecondary}}</div>
-        <ng-container class="twistBox" *ngIf="twistSubject">
-            <h3>PLOT TWIST!</h3>
-            <ng-container>{{twistSubject}} {{twistAction}}</ng-container>
+<div class="oracle--wrapper">
+    <div class='oracle--textBox'>
+        <h2 class="oracle--spacer--tiny">{{oracle.title}}</h2>
 
-        </ng-container>
-        <ng-container>
-            <div *ngIf="descReminder" class="reminder">{{descReminder}}</div>
-        </ng-container>
+        <div class="rollResults--wrapper oracle--spacer--tiny">
+            <div *ngIf="rollPrimary>0" [class.rollResults--text--bold]="rollSecondary">Rolled: {{rollPrimary}}</div>
+            <div *ngIf="rollSecondary>0" class="rollResults--text--spacer reminder--italic">(and {{rollSecondary}})
+            </div>
+        </div>
 
+        <h3 *ngIf="descPrimary" class="oracle--spacer--tiny">"{{descPrimary}}"</h3>
+        <div *ngIf="descSecondary" class="oracle--spacer--tiny">{{descSecondary}}</div>
+
+        <div class="rollButtons--wrapper oracle--pin--bottom">
+
+            <div class="twistBox" *ngIf="twistSubject">
+                <h3>PLOT TWIST!</h3>
+                <ng-container>{{twistSubject}} {{twistAction}}</ng-container>
+            </div>
+
+            <div *ngIf="descReminder" class="reminder--italic oracle--spacer--tiny">{{descReminder}}</div>
+            
+            <button class="rollButtons" (click)="rollDice(likely[1])" *ngFor="let likely of odds">{{likely[1]}}
+            </button>
+        </div>
 
     </div>
-
-
-
-</button>
+</div>

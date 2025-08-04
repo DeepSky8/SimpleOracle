@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { IOracle } from '../../data/oracle.model';
 import { CommonModule } from '@angular/common';
-import { IRoll } from '../../data/roll.model';
 
 @Component({
   selector: 'app-oracle',
@@ -14,8 +13,6 @@ export class Oracle {
 
   ngOnInit() { }
 
-  setLikely() { }
-
   generateRoll(maxRoll: number, currentRoll: number): number {
     if (maxRoll > 0) {
       const newRoll = Math.floor(Math.random() * maxRoll) + 1
@@ -25,7 +22,7 @@ export class Oracle {
     }
   }
 
-  rollDice() { }
+  rollDice(parameter?: string): void { }
 
 
 }

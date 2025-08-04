@@ -101,18 +101,18 @@ export const oracles: IOracle[] = [
                 ],
                 [
                     // Entry Four
-                    'No',
-                    "You fail",
-                    "A moderate failure that brings the scene to a halt or obstacle"
-                ],
-                [
-                    // Entry Five
-                    'Yes, but…',
-                    "You succeed, but at a cost",
+                    'Yes, but...',
+                    "You suceed, but at a cost",
                     "A success with consequences that slow your progress"
                 ],
                 [
-                    // Entry Four
+                    // Entry Five
+                    'Yes',
+                    "You succeed",
+                    "A moderate success that moves the story forward as expected"
+                ],
+                [
+                    // Entry Six
                     'Yes, and…',
                     "You succeed and gain something extra",
                     "A major success that drives the story forward boldly"
@@ -145,7 +145,7 @@ export const oracles: IOracle[] = [
                     'An emotional shift'
                 ],
                 [
-                    // Entry Siz - Twist Die Subjects
+                    // Entry Six - Twist Die Subjects
                     'An object or clue'
                 ],
             ],
@@ -153,31 +153,31 @@ export const oracles: IOracle[] = [
             [
                 [
                     // Entry Zero - never displayed
-                    '', '', ''
+                    '',
                 ],
                 [
                     // Entry One - Twist Die Actions
-                    'appears or interferes'
+                    'interferes', 'appears'
                 ],
                 [
                     // Entry Two - Twist Die Actions
-                    'alters the location'
+                    'alters the location', 'alters the location'
                 ],
                 [
                     // Entry Three - Twist Die Actions
-                    'helps or hinders'
+                    'hinders', 'helps'
                 ],
                 [
                     // Entry Four - Twist Die Actions
-                    'creates an obstacle'
+                    'creates an obstacle', 'removes an obstacle'
                 ],
                 [
                     // Entry Five - Twist Die Actions
-                    'changes the motive/goal'
+                    'changes the motive/goal', 'changes the motive/goal'
                 ],
                 [
-                    // Entry Siz - Twist Die Actions
-                    'advances or disrupts the plot'
+                    // Entry Six - Twist Die Actions
+                    'disrupts the plot', 'advances the plot'
                 ],
             ]
 
@@ -191,7 +191,5 @@ export const oracles: IOracle[] = [
             rollSixMax: 0,
             rollSevenMax: 0,
         },
-        useLikely: true,
-        howLikely: odds.average,
     }
 ]

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Oracle } from '../../display/oracle/oracle';
 import { CommonModule } from '@angular/common';
+import { odds } from '../odds';
 
 @Component({
   selector: 'app-yn-oracle',
@@ -8,24 +9,14 @@ import { CommonModule } from '@angular/common';
   templateUrl: './yn-oracle.html',
   styleUrls: [
     './yn-oracle.scss',
-    '../../../styles/_oracleButton.scss'
+    '../../../styles/_oracleDefaults.scss'
   ]
 })
 export class YnOracle extends Oracle {
+  public odds = Object.entries(odds);
   rollPrimary: number = 0; // Regular roll
   rollSecondary: number = 0; // Secondary roll (advantage/disadvantage)
   rollTwistCap: number = 0; // Current Twist Die cap
-  // rollTwistSubject: number = 0; // 
-  // rollTwistAction: number = 0; // 
-  likely: string = '';
-  // textObject: IEntry = {
-  //   textOne: "",
-  //   textTwo: "",
-  //   textThree: "",
-  //   textFour: "",
-  //   textFive: "",
-  //   textSix: "",
-  // };
 
   descPrimary: string = ''
   descSecondary: string = ''
@@ -34,20 +25,13 @@ export class YnOracle extends Oracle {
   twistSubject: string = ''
   twistAction: string = ''
 
-
-
   override ngOnInit() {
-    if (this.oracle.useLikely) {
-      this.likely = this.oracle.howLikely
-    };
-    // this.textObject = this.oracle.table[0][0];
+
     this.descPrimary = this.oracle.table[0][0][0]
     this.descSecondary = this.oracle.table[0][0][1]
     this.descReminder = this.oracle.table[0][0][2]
     this.rollTwistCap = this.oracle.rollCaps.rollThreeMax;
   }
-
-  override setLikely() { }
 
   newTwistDieCap(currentRoll: number, currentTwistDie: number): number {
     // Twist die starts at 4
@@ -69,38 +53,82 @@ export class YnOracle extends Oracle {
     }
   }
 
-  override rollDice() {
+
+
+  override rollDice(likelihood: string): void {
     this.twistSubject = ''
     this.twistAction = ''
-
     const tempRollOne = this.generateRoll(this.oracle.rollCaps.rollOneMax, this.rollPrimary)
-    this.rollPrimary = tempRollOne;
-    this.descPrimary = this.oracle.table[0][tempRollOne][0]
-    this.descSecondary = this.oracle.table[0][tempRollOne][1]
-    this.descReminder = this.oracle.table[0][tempRollOne][2]
-
     const tempRollTwo = this.generateRoll(this.oracle.rollCaps.rollTwoMax, this.rollSecondary)
-    this.rollSecondary = tempRollTwo;
+    this.rollPrimary = 0
+    this.rollSecondary = 0
 
-    // evaluate whether the twist die is decremented,
-    const tempRollThree = this.newTwistDieCap(tempRollOne, this.rollTwistCap);
+    switch (likelihood) {
+      case odds.average: {
+        this.rollPrimary = tempRollOne;
+        this.descPrimary = this.oracle.table[0][tempRollOne][0]
+        this.descSecondary = this.oracle.table[0][tempRollOne][1]
+        this.descReminder = this.oracle.table[0][tempRollOne][2]
+
+        this.evaluateTwist(tempRollOne)
+        break;
+      }
+      case odds.likely: {
+        const sortedRolls = [tempRollOne, tempRollTwo].sort()
+        const tempPrimary = sortedRolls[1]
+        const tempSecondary = sortedRolls[0]
+
+        this.rollPrimary = tempPrimary
+        this.rollSecondary = tempSecondary
+
+        this.descPrimary = this.oracle.table[0][tempPrimary][0]
+        this.descSecondary = this.oracle.table[0][tempPrimary][1]
+        this.descReminder = this.oracle.table[0][tempPrimary][2]
+
+        this.evaluateTwist(tempPrimary)
+        break;
+      }
+
+      case odds.unlikely: {
+        const sortedRolls = [tempRollOne, tempRollTwo].sort()
+        const tempPrimary = sortedRolls[0]
+        const tempSecondary = sortedRolls[1]
+
+        this.rollPrimary = tempPrimary
+        this.rollSecondary = tempSecondary
+
+        this.descPrimary = this.oracle.table[0][tempSecondary][0]
+        this.descSecondary = this.oracle.table[0][tempSecondary][1]
+        this.descReminder = this.oracle.table[0][tempSecondary][2]
+
+        this.evaluateTwist(tempSecondary)
+        break;
+      }
+
+      default: {
+
+        break;
+      }
+    }
+  }
+
+  evaluateTwist(currentRoll: number): void {
+    const tempRollThree = this.newTwistDieCap(currentRoll, this.rollTwistCap);
     const triggeredTwist = tempRollThree === 4 && this.rollTwistCap === 2;
     this.rollTwistCap = tempRollThree;
-
-    // if the twist triggers, 
-    // do something
 
     if (triggeredTwist) {
       this.rollTwistDie()
     }
-
   }
 
-  rollTwistDie() {
+  rollTwistDie(): void {
     const tempRollFour = this.generateRoll(this.oracle.rollCaps.rollFourMax, 0)
     this.twistSubject = this.oracle.table[1][tempRollFour][0]
+
     const tempRollFive = this.generateRoll(this.oracle.rollCaps.rollFiveMax, 0)
-    this.twistAction = this.oracle.table[2][tempRollFive][0]
+    const helpHinderActionDesc = [3, 5, 6].includes(this.rollPrimary) ? 1 : 0
+    this.twistAction = this.oracle.table[2][tempRollFive][helpHinderActionDesc]
   }
 
 
