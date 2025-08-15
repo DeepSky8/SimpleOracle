@@ -1,28 +1,42 @@
 <div class="oracle--wrapper">
-    <div class='oracle--topBox'>
-        <h2 class="oracle--spacer--tiny">{{oracle.title}}</h2>
+  <div class='oracle--topBox'>
+    <h2 class="oracle--spacer--tiny">{{oracle.title}}</h2>
 
-        <div class="rollResults--wrapper oracle--spacer--tiny">
-            <div *ngIf="rollPrimary>0" [class.rollResults--text--bold]="rollSecondary">Rolled: {{rollPrimary}}</div>
-            <div *ngIf="rollSecondary>0" class="rollResults--text--spacer reminder--italic">(and {{rollSecondary}})
-            </div>
+    <div class="rollResults--wrapper oracle--spacer--tiny">
+      @if (rollPrimary>0) {
+        <div [class.rollResults--text--bold]="rollSecondary">Rolled: {{rollPrimary}}</div>
+      }
+      @if (rollSecondary>0) {
+        <div class="rollResults--text--spacer reminder--italic">(and {{rollSecondary}})
         </div>
-
-        <h3 *ngIf="descPrimary" class="oracle--spacer--tiny">{{descPrimary}}</h3>
-        <div *ngIf="descSecondary" class="oracle--spacer--tiny">{{descSecondary}}</div>
-
-
+      }
     </div>
-    <div class="oracle--bottomBox">
 
-        <div class="twistBox" *ngIf="twistSubject">
-            <h3>PLOT TWIST!</h3>
-            <ng-container>{{twistSubject}} {{twistAction}}</ng-container>
-        </div>
+    @if (descPrimary) {
+      <h3 class="oracle--spacer--tiny">{{descPrimary}}</h3>
+    }
+    @if (descSecondary) {
+      <div class="oracle--spacer--tiny">{{descSecondary}}</div>
+    }
 
-        <div *ngIf="descReminder" class="reminder--italic oracle--spacer--tiny">{{descReminder}}</div>
 
-        <button class="rollButtons" (click)="rollDice(likely[1])" *ngFor="let likely of odds">{{likely[1]}}
-        </button>
-    </div>
+  </div>
+  <div class="oracle--bottomBox">
+
+    @if (twistSubject) {
+      <div class="twistBox">
+        <h3>PLOT TWIST!</h3>
+        <ng-container>{{twistSubject}} {{twistAction}}</ng-container>
+      </div>
+    }
+
+    @if (descReminder) {
+      <div class="reminder--italic oracle--spacer--tiny">{{descReminder}}</div>
+    }
+
+    @for (likely of odds; track likely) {
+      <button class="rollButtons" (click)="rollDice(likely[1])">{{likely[1]}}
+      </button>
+    }
+  </div>
 </div>

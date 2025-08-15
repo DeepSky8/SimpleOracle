@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { IOracle } from '../../data/oracle.model';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-oracle',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './oracle.html',
   styleUrl: './oracle.scss'
 })

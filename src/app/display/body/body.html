@@ -1,12 +1,14 @@
 <div class="wrapper">
-    <ul>
-        <li class="" *ngFor="let oracle of oracles">
+  <ul>
+    @for (oracle of oracles; track oracle) {
+      <li class="">
             <ng-container *ngComponentOutlet="
             componentSelector(oracle);
             inputs: {oracle}
             " />
         </li>
+      }
 
     </ul>
 
-</div>
+  </div>

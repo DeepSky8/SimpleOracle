@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { Oracle } from '../../display/oracle/oracle';
-import { CommonModule } from '@angular/common';
+
 import { odds } from '../odds';
 
 @Component({
   selector: 'app-yn-oracle',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './yn-oracle.html',
   styleUrls: [
     './yn-oracle.scss',
