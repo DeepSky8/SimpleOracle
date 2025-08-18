@@ -33,15 +33,19 @@ export class YnOracle extends Oracle {
     this.rollTwistCap = this.oracle.rollCaps.rollThreeMax;
   }
 
+  evaluateTwistRollDecrement(currentRoll: number, twistRoll: number): boolean {
+    return ((currentRoll === 1 || currentRoll === 6) && twistRoll === 1)
+  }
+
   newTwistDieCap(currentRoll: number, currentTwistDie: number): number {
     // Twist die starts at 4
     const twistRoll = this.generateRoll(currentTwistDie, 0)
 
     // Only invoke the twist die on a currentRoll of 1 or 6
     // AND if the twist roll is 1
-    if ((currentRoll === 1 || currentRoll === 6) && twistRoll === 1) {
+    if (this.evaluateTwistRollDecrement(currentRoll, twistRoll)) {
       // If the current twist die is capped at 2, we've triggered a twist
-      if (currentTwistDie === 2) {
+      if (currentTwistDie <= 2) {
         return 4
       } else {
         // else decrement the twist cap
@@ -60,6 +64,8 @@ export class YnOracle extends Oracle {
     this.twistAction = ''
     const tempRollOne = this.generateRoll(this.oracle.rollCaps.rollOneMax, this.rollPrimary)
     const tempRollTwo = this.generateRoll(this.oracle.rollCaps.rollTwoMax, this.rollSecondary)
+    const sortedRolls = [tempRollOne, tempRollTwo].sort()
+
     this.rollPrimary = 0
     this.rollSecondary = 0
 
@@ -74,7 +80,6 @@ export class YnOracle extends Oracle {
         break;
       }
       case odds.likely: {
-        const sortedRolls = [tempRollOne, tempRollTwo].sort()
         const tempPrimary = sortedRolls[1]
         const tempSecondary = sortedRolls[0]
 
@@ -90,7 +95,6 @@ export class YnOracle extends Oracle {
       }
 
       case odds.unlikely: {
-        const sortedRolls = [tempRollOne, tempRollTwo].sort()
         const tempPrimary = sortedRolls[0]
         const tempSecondary = sortedRolls[1]
 

@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OracleDisplay } from './oracle-display';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('OracleDisplay', () => {
   let component: OracleDisplay;
@@ -8,7 +9,8 @@ describe('OracleDisplay', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OracleDisplay]
+      imports: [OracleDisplay],
+      providers: [provideZonelessChangeDetection()]
     })
     .compileComponents();
 

@@ -3,77 +3,11 @@ import { IOracle } from "./oracle.model";
 import { oracleType } from "./oracle.model";
 
 export const oracles: IOracle[] = [
-    // {
-    //     title: "Yes/No",
-    //     type: oracleType.yesNo,
-    //     table: [
-    //         // Row One
-    //         [
-    //             {
-    //                 // Entry Zero (prior to roll)
-    //                 textOne: 'Think of a question',
-    //                 textTwo: "Select the likelihood",
-    //                 textThree: "Tap here to roll"
-    //             },
-    //             {
-    //                 // Entry One
-    //                 textOne: 'No, and...',
-    //                 textTwo: "You fail, and something makes it worse",
-    //                 textThree: "A major failure that escalates the stakes"
-    //             },
-    //             {
-    //                 // Entry Two
-    //                 textOne: 'No',
-    //                 textTwo: "You fail",
-    //                 textThree: "A moderate failure that brings the scene to a halt or obstacle"
-    //             },
-    //             {
-    //                 // Entry Three
-    //                 textOne: 'No, but...',
-    //                 textTwo: "You fail, but something useful happens",
-    //                 textThree: "A failure with compensation or a shift in direction"
-    //             },
-    //             {
-    //                 // Entry Four
-    //                 textOne: 'No',
-    //                 textTwo: "You fail",
-    //                 textThree: "A moderate failure that brings the scene to a halt or obstacle"
-    //             },
-    //             {
-    //                 // Entry Five
-    //                 textOne: 'Yes, but…',
-    //                 textTwo: "You succeed, but at a cost",
-    //                 textThree: "A success with consequences that slow your progress"
-    //             },
-    //             {
-    //                 // Entry Four
-    //                 textOne: 'Yes, and…',
-    //                 textTwo: "You succeed and gain something extra",
-    //                 textThree: "A major success that drives the story forward boldly"
-    //             },
-    //         ],
-    //         // Row Two
-    //         [
-
-    //         ]
-    //     ],
-    //     rollCaps: {
-    //         rollOneMax: 6, // Regular roll cap
-    //         rollTwoMax: 6, // dis/advantage roll cap
-    //         rollThreeMax: 4, // twist roll cap
-    //         rollFourMax: 6, // twist subject roll cap
-    //         rollFiveMax: 6, // twist verb roll cap
-    //         rollSixMax: 0,
-    //         rollSevenMax: 0,
-    //     },
-    //     useLikely: true,
-    //     howLikely: odds.average,
-    // },
     {
         title: "Yes/No",
         type: oracleType.yesNo,
         table: [
-            // Row One
+            // Row Zero
             [
                 [
                     // Entry Zero - only displayed during intro
@@ -118,7 +52,7 @@ export const oracles: IOracle[] = [
                     "A major success that drives the story forward boldly"
                 ],
             ],
-            // Row Two
+            // Row One
             [
                 [
                     // Entry Zero - never displayed
@@ -149,7 +83,7 @@ export const oracles: IOracle[] = [
                     'An object or clue'
                 ],
             ],
-            // Row Three
+            // Row Two
             [
                 [
                     // Entry Zero - never displayed
