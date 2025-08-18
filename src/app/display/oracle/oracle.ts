@@ -16,7 +16,7 @@ export class Oracle {
   generateRoll(maxRoll: number, currentRoll: number): number {
     if (maxRoll > 0) {
       const newRoll = Math.floor(Math.random() * maxRoll) + 1
-      return currentRoll !== newRoll ? newRoll : this.generateRoll(maxRoll, currentRoll)
+      return (currentRoll === newRoll ? this.generateRoll(maxRoll, currentRoll) : newRoll)
     } else {
       return 0
     }

@@ -9,4 +9,5 @@ export interface IOracle {
 
 export enum oracleType {
     yesNo = 'yesNo',
+    magnitude = 'magnitude'
 }

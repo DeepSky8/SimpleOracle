@@ -3,3 +3,9 @@ export enum odds {
     average = 'Average',
     unlikely = 'Unlikely',
 }
+
+export enum amounts {
+    more = 'Likely Higher',
+    average = 'Average',
+    fewer = 'Likely Lower'
+}

@@ -125,5 +125,66 @@ export const oracles: IOracle[] = [
             rollSixMax: 0,
             rollSevenMax: 0,
         },
+    },
+    {
+        title: "Magnitude",
+        type: oracleType.magnitude,
+        table: [
+            // Row Zero
+            [
+                [
+                    // Entry Zero - only displayed during intro
+                    "Big, Good, Strong, Numerous",
+                    "What magnitude do you expect?",
+                    "Tap here to roll"
+                ],
+                [
+                    // Entry One
+                    'Surprisingly lacking',
+                    "",
+                    "Actually, why is it so low?"
+                ],
+                [
+                    // Entry Two
+                    'Less than expected',
+                    "",
+                    "Congrats, or I'm sorry"
+                ],
+                [
+                    // Entry Three
+                    'About average',
+                    "",
+                    "Your intuition was correct"
+                ],
+                [
+                    // Entry Four
+                    'About average',
+                    "",
+                    "Your intuition was correct"
+                ],
+                [
+                    // Entry Five
+                    'More than expected',
+                    "",
+                    "Sorry about that, or congratulations"
+                ],
+                [
+                    // Entry Six
+                    'Extraordinary',
+                    "",
+                    "That's .... many"
+                ],
+            ],
+
+        ],
+        rollCaps: {
+            rollOneMax: 6, // Primary
+            rollTwoMax: 6, // Secondary
+            rollThreeMax: 0, // Twist die
+            rollFourMax: 0, // Subject
+            rollFiveMax: 0, // Action
+            rollSixMax: 0,
+            rollSevenMax: 0,
+        },
     }
 ]
