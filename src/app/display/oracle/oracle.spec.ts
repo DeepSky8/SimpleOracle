@@ -12,7 +12,7 @@ describe('Oracle', () => {
       imports: [Oracle],
       providers: [provideZonelessChangeDetection()]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(Oracle);
     component = fixture.componentInstance;
@@ -22,4 +22,19 @@ describe('Oracle', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it(`should generate an integer between maxRoll and 1 (inclusive) that does not match the current roll`, () => {
+    const shouldBeOne = component.generateRoll(1, 0)
+    expect(shouldBeOne).toEqual(1)
+
+    const cannotBeTwo = component.generateRoll(2, 2)
+    expect(cannotBeTwo).toEqual(1)
+
+    const shouldBeZero = component.generateRoll(0, 0)
+    expect(shouldBeZero).toEqual(0)
+
+    const lessThanTen = component.generateRoll(10, 0)
+    expect(lessThanTen).toBeLessThanOrEqual(10)
+  })
+
 });
