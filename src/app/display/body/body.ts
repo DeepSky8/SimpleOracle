@@ -5,6 +5,7 @@ import { YnOracle } from '../../data/yn-oracle/yn-oracle';
 import { Oracle } from '../oracle/oracle';
 import { NgComponentOutlet } from '@angular/common';
 import { HowOracle } from '../../data/how-oracle/how-oracle';
+import { InspirationOracle } from '../../data/inspiration-oracle/inspiration-oracle';
 
 @Component({
   selector: 'app-body',
@@ -26,6 +27,9 @@ export class Body {
       }
       case oracleType.magnitude: {
         return HowOracle
+      }
+      case oracleType.inspiration: {
+        return InspirationOracle
       }
       default: {
         return YnOracle

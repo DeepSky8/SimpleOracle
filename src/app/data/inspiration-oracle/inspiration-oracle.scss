@@ -1,0 +1,45 @@
+@use "../../../styles/sizes";
+
+.inspirationWrapper {
+    display: block;
+    font-size: sizes.$calcFontSizeMed;
+    padding-top: 15%;
+}
+
+.inspireWord {
+    text-align: center;
+}
+
+.rollButtons {
+    width: 100%;
+}
+
+.reminder--italic {
+    font-style: italic;
+}
+
+.rollResults--wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.rollResults--text--spacer {
+    padding-left: 5px;
+}
+
+.rollResults--text--bold {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+@media only screen and (min-device-width: sizes.$desktop-breakpoint) {
+    .inspirationWrapper {
+        display: block;
+        font-size: sizes.$calcFontSizeSmall;
+    }
+
+    .rollButtons {
+        width: 90%;
+    }
+}

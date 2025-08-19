@@ -1,1 +1,49 @@
-<p>inspiration-oracle works!</p>
+<div class="oracle--wrapper">
+    <div class='oracle--topBox'>
+        <h2 class="oracle--spacer--tiny">{{oracle.title}}</h2>
+
+        <div class="rollResults--wrapper oracle--spacer--tiny">
+            @if (rollPrimary>0) {
+            <div id="rollPrimary" [class.rollResults--text--bold]="rollSecondary">Rolled: {{rollPrimary}}</div>
+            }
+            @if (rollSecondary>0) {
+            <div id="rollSecondary" class="rollResults--text--spacer reminder--italic">(and {{rollSecondary}})
+            </div>
+            }
+        </div>
+
+        @if (descPrimary) {
+        <h3 id="descPrimary" class="oracle--spacer--tiny">{{descPrimary}}</h3>
+        }
+        @if (descSecondary) {
+        <div id="descSecondary" class="oracle--spacer--tiny">{{descSecondary}}</div>
+        }
+
+        @if(descVerb || descNoun || descAdjective){
+        <div class="inspirationWrapper">
+            @if(descVerb){
+            <h3 class="inspireWord" id="descVerb">{{descVerb | titlecase}}</h3>
+            }
+            @if(descNoun){
+            <h3 class="inspireWord" id="descNoun">{{descNoun| titlecase}}</h3>
+            }
+            @if(descAdjective){
+            <h3 class="inspireWord" id="descAdjective">{{descAdjective| titlecase}}</h3>
+            }
+
+        </div>
+        }
+
+    </div>
+    <div class="oracle--bottomBox">
+
+
+
+        @if (descReminder) {
+        <div id="descReminder" class=" reminder--italic oracle--spacer--tiny">{{descReminder}}</div>
+        }
+
+        <button class="rollButtons" (click)="rollDice()">Generate</button>
+
+    </div>
+</div>

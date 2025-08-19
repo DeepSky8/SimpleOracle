@@ -186,5 +186,123 @@ export const oracles: IOracle[] = [
             rollSixMax: 0,
             rollSevenMax: 0,
         },
-    }
+    },
+    {
+        title: "Inspiration",
+        type: oracleType.inspiration,
+        table: [
+            // Row Zero
+            [
+                [
+                    // Entry Zero - only displayed during intro
+                    "Interpretation/Inspiration",
+                    "What's at stake, or how does the story shift?",
+                    "Tap here to roll"
+                ],
+            ],
+            // Row One - Verb Table
+            [
+                [
+                    // Entry Zero - never displayed
+                    ''
+                ],
+                [
+                    // Entry One
+                    '', 'seek', 'oppose', 'deceive', 'study', 'ask', 'continue'
+                ],
+                [
+                    // Entry Two
+                    '', 'communicate', 'move', 'replace', 'share', 'play', 'balance'
+                ],
+                [
+                    // Entry Three
+                    '', 'harm', 'create', 'expand', 'desire', 'possess', 'overlook',
+                ],
+                [
+                    // Entry Four
+                    '', 'reveal', 'command', 'explore', 'borrow', 'receive', 'multiply'
+                ],
+                [
+                    // Entry Five
+                    '', 'take', 'challenge', 'damage', 'collect', 'improve', 'follow'
+                ],
+                [
+                    // Entry Six
+                    '', 'assist', 'transform', 'uncover', 'control', 'block', 'reduce'
+                ],
+            ],
+            // Row Two - Noun Table
+            [
+                [
+                    // Entry Zero - never displayed
+                    '',
+                ],
+                [
+                    // Entry One
+                    '', 'need', 'allies', 'result', 'shift', 'threat', 'home'
+                ],
+                [
+                    // Entry Two
+                    '', 'community', 'history', 'offer', 'outcast', 'conflict', 'gift'
+                ],
+                [
+                    // Entry Three
+                    '', 'plans', 'enemies', 'beginning', 'memory', 'chance', 'group'
+                ],
+                [
+                    // Entry Four
+                    '', 'knowledge', 'rumors', 'discovery', 'disguise', 'signal', 'name'
+                ],
+                [
+                    // Entry Five
+                    '', 'plot', 'event', 'spy', 'loss', 'path', 'map'
+                ],
+                [
+                    // Entry Six
+                    '', 'equipment', 'faction', 'place', 'object', 'harm', 'respect'
+                ],
+            ],
+            // Row Three - Adjective Table
+            [
+                [
+                    // Entry Zero - never displayed
+                    '',
+                ],
+                [
+                    // Entry One
+                    '', 'small', 'large', 'unique', 'faulty', 'sophisticated', 'tricky'
+                ],
+                [
+                    // Entry Two
+                    '', 'old', 'new', 'broken', 'wealthy', 'quiet', 'magnificent'
+                ],
+                [
+                    // Entry Three
+                    '', 'ordinary', 'simple', 'unhealthy', 'scarce', 'enduring', 'harsh'
+                ],
+                [
+                    // Entry Four
+                    '', 'clean', 'unsavory', 'surprising', 'rare', 'weak', 'amusing'
+                ],
+                [
+                    // Entry Five
+                    '', 'slow', 'perfect', 'defiant', 'generous', 'busy', 'happy'
+                ],
+                [
+                    // Entry Six
+                    '', 'exotic', 'dignified', 'violent', 'rough', 'noisy', 'scary'
+                ],
+            ]
+
+        ],
+        rollCaps: {
+            rollOneMax: 6, // All rolls for this oracle are capped at 6
+            rollTwoMax: 0,
+            rollThreeMax: 0,
+            rollFourMax: 0,
+            rollFiveMax: 0,
+            rollSixMax: 0,
+            rollSevenMax: 0,
+        },
+    },
 ]
