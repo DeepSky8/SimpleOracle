@@ -37,6 +37,7 @@ button {
     margin-bottom: sizes.$spacer--mobile;
     color: colors.$bodyTextColor;
     background-color: colors.$oracleBackground;
+    cursor: pointer;
 }
 
 button:hover {
