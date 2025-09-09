@@ -1,8 +1,12 @@
 import { IRoll } from "./roll.model";
 
 export interface IOracle {
+    iID: number,
     title: string
     type: string,
+    defaultPosition: number,
+    currentPosition: number,
+    pinned: boolean,
     table: string[][][],
     rollCaps: IRoll,
 }
@@ -10,6 +14,6 @@ export interface IOracle {
 // Also must update the body.ts function that selects which component goes with the type
 export enum oracleType {
     yesNo = 'yesNo',
-    magnitude = 'magnitude',
-    inspiration = 'inspiration',
+    singleroll = 'singleroll',
+    multiroll = 'multiroll',
 }

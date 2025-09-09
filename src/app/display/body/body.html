@@ -1,10 +1,10 @@
 <div class="wrapper">
   <ul>
-    @for (oracle of oracles; track oracle) {
+    @for (oracle of oracles; track oracle.iID) {
       <li class="">
             <ng-container *ngComponentOutlet="
             componentSelector(oracle);
-            inputs: {oracle}
+            inputs: {oracle, pinLength};
             " />
         </li>
       }

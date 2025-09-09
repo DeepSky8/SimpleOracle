@@ -15,9 +15,6 @@
     border: 1px solid colors.$oracleOutline;
 
     box-shadow: 0px 10px 21px -2px colors.$shadowBlack;
-    // display: inline-flex;
-    // align-items: flex-start;
-    // justify-content: center;
 }
 
 button {
@@ -64,27 +61,44 @@ button:hover {
     padding: sizes.$spacer--mobile;
 }
 
-// .oracle--reminder {
-//     font-style: italic;
-//     position: absolute;
-//     bottom: 12px;
-//     left: 50%;
-//     transform: translateX(-50%);
-// }
-
-// .oracle--pin--bottom {
-//     position: absolute;
-//     bottom: 12px;
-//     left: 50%;
-//     transform: translateX(-50%);
-// }
-
 .oracle--spacer--tiny {
     padding-bottom: sizes.$xs-size;
 }
 
 .oracle--spacer--med {
     padding-bottom: sizes.$m-size;
+}
+
+.oracle--title--wrapper {
+    display: flex;
+    height: 74px;
+}
+
+.oracle--title--width {
+    width: 80%;
+}
+
+.oracle--pin--width {
+    width: 10%;
+}
+
+.oracle--pin--height {
+    height: 37px;
+}
+
+.oracle--pin--button {
+    font-family: "Material Symbols Outlined";
+    font-size: larger;
+    border: 0;
+    margin: auto;
+    padding: auto;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.oracle--pin--button:hover {
+    background-color: color.adjust(colors.$oracleBackground, $lightness: -3%);
+    box-shadow: none;
 }
 
 @media only screen and (min-device-width: sizes.$medium-breakpoint) {

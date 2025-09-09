@@ -1,15 +1,17 @@
 import { Component } from '@angular/core';
 import { Oracle } from '../../display/oracle/oracle';
 
-import { odds } from '../odds';
+import { odds } from '../library';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-yn-oracle',
-  imports: [],
+  imports: [NgClass],
   templateUrl: './yn-oracle.html',
   styleUrls: [
+    '../../../styles/_materialIcons.scss',
     './yn-oracle.scss',
-    '../../../styles/_oracleDefaults.scss'
+    '../../../styles/_oracleDefaults.scss',
   ]
 })
 export class YnOracle extends Oracle {
@@ -26,7 +28,7 @@ export class YnOracle extends Oracle {
   twistAction: string = ''
 
   override ngOnInit() {
-
+    super.ngOnInit()
     this.descPrimary = this.oracle.table[0][0][0]
     this.descSecondary = this.oracle.table[0][0][1]
     this.descReminder = this.oracle.table[0][0][2]

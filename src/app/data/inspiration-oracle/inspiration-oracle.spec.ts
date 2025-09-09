@@ -6,15 +6,23 @@ import { oracles } from '../oracles';
 import { oracleType } from '../oracle.model';
 import { By } from '@angular/platform-browser';
 import { TitleCasePipe } from '@angular/common';
+import { storageToken, testLocation } from '../library';
+import { OraclePinService } from '../oracle.service';
 
 describe('InspirationOracle', () => {
   let component: InspirationOracle;
   let fixture: ComponentFixture<InspirationOracle>;
+  let mockOracleService = jasmine.createSpyObj('OraclePinService', ['getOracles', 'getPinnedLength']);
+
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [InspirationOracle],
-      providers: [provideZonelessChangeDetection()]
+      providers: [
+        provideZonelessChangeDetection(),
+        { provide: storageToken, useValue: testLocation },
+        { provide: OraclePinService, useValue: mockOracleService },
+      ]
     })
       .compileComponents();
 
@@ -28,20 +36,20 @@ describe('InspirationOracle', () => {
     expect(component).toBeTruthy();
   });
 
-  it("should only generate on type 'inspiration'", () => {
-    expect(component.oracle.type).toEqual(oracleType.inspiration)
+  it("should only generate on type 'multiroll'", () => {
+    expect(component.oracle.type).toEqual(oracleType.multiroll)
   })
 
   it(`should display the Oracle title`, () => {
     expect(fixture.debugElement.query(By.css('h2')).nativeElement.textContent).toEqual(oracles[2].title)
   })
 
-  it(`should have one button`, () => {
-    expect(fixture.debugElement.queryAll(By.css('button')).length).toEqual(1)
+  it(`should have a 'generateInspiration' button`, () => {
+    expect(fixture.debugElement.query(By.css('#generateInspiration'))).toBeTruthy()
   })
 
   it(`should set six roll values and three text values`, () => {
-    const generateButton = fixture.debugElement.query(By.css('button'))
+    const generateButton = fixture.debugElement.query(By.css('#generateInspiration'))
     generateButton.triggerEventHandler('click', null)
     fixture.detectChanges()
 
@@ -71,7 +79,7 @@ describe('InspirationOracle', () => {
   })
 
   it(`should set the verb/noun/adjective text to match the component text`, () => {
-    const generateButton = fixture.debugElement.query(By.css('button'))
+    const generateButton = fixture.debugElement.query(By.css('#generateInspiration'))
     generateButton.triggerEventHandler('click', null)
     fixture.detectChanges()
 

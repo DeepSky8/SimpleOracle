@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { IOracle, oracleType } from '../../data/oracle.model';
-import { oracles } from '../../data/oracles';
 import { YnOracle } from '../../data/yn-oracle/yn-oracle';
 import { Oracle } from '../oracle/oracle';
 import { NgComponentOutlet } from '@angular/common';
 import { HowOracle } from '../../data/how-oracle/how-oracle';
 import { InspirationOracle } from '../../data/inspiration-oracle/inspiration-oracle';
+import { OraclePinService } from '../../data/oracle.service';
 
 @Component({
   selector: 'app-body',
@@ -14,10 +14,18 @@ import { InspirationOracle } from '../../data/inspiration-oracle/inspiration-ora
   styleUrl: './body.scss'
 })
 export class Body {
-  oracles: IOracle[];
+  oracles: IOracle[] = [];
+  pinLength: number = 0;
 
-  constructor() {
-    this.oracles = oracles
+  constructor(private oraclePinService: OraclePinService) { }
+
+  ngOnInit(): void {
+    this.oraclePinService.getOracles().subscribe({
+      next: (oracles) => (this.oracles = oracles)
+    })
+    this.oraclePinService.getPinnedLength().subscribe({
+      next: (length) => (this.pinLength = length)
+    })
   }
 
   componentSelector(oracle: IOracle): typeof Oracle {
@@ -25,10 +33,10 @@ export class Body {
       case oracleType.yesNo: {
         return YnOracle
       }
-      case oracleType.magnitude: {
+      case oracleType.singleroll: {
         return HowOracle
       }
-      case oracleType.inspiration: {
+      case oracleType.multiroll: {
         return InspirationOracle
       }
       default: {
@@ -36,5 +44,4 @@ export class Body {
       }
     }
   }
-
 }

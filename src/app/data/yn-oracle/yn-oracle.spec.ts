@@ -5,15 +5,23 @@ import { provideZonelessChangeDetection } from '@angular/core';
 import { oracles } from '../oracles';
 import { oracleType } from '../oracle.model';
 import { By } from '@angular/platform-browser';
+import { storageToken, testLocation } from '../library';
+import { OraclePinService } from '../oracle.service';
 
 describe('YnOracle', () => {
   let component: YnOracle;
   let fixture: ComponentFixture<YnOracle>;
+  let mockOracleService = jasmine.createSpyObj('OraclePinService', ['pin', 'moveUp', 'moveDown','getOracles', 'getPinnedLength']);
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [YnOracle],
-      providers: [provideZonelessChangeDetection()]
+      providers: [
+        provideZonelessChangeDetection(),
+        { provide: storageToken, useValue: testLocation },
+        { provide: OraclePinService, useValue: mockOracleService },
+
+      ]
     })
       .compileComponents();
 
@@ -33,7 +41,7 @@ describe('YnOracle', () => {
 
   it(`should set/display the higher of two numbers as 'rollPrimary' when 'likely' is rolled`,
     () => {
-      const likelyButton = fixture.debugElement.queryAll(By.css('button'))[0]
+      const likelyButton = fixture.debugElement.query(By.css('#odds0'))
       likelyButton.triggerEventHandler('click', null)
       fixture.detectChanges();
 
@@ -44,7 +52,7 @@ describe('YnOracle', () => {
 
   it(`should generate/display a single number as 'rollPrimary' when 'average' is rolled`,
     () => {
-      const averageButton = fixture.debugElement.queryAll(By.css('button'))[1]
+      const averageButton = fixture.debugElement.query(By.css('#odds1'))
       averageButton.triggerEventHandler('click', null)
       fixture.detectChanges();
 
@@ -57,7 +65,7 @@ describe('YnOracle', () => {
 
   it(`should set/display the lower of two numbers as 'rollPrimary' when 'unlikely' is rolled`,
     () => {
-      const unlikelyButton = fixture.debugElement.queryAll(By.css('button'))[2]
+      const unlikelyButton = fixture.debugElement.query(By.css('#odds2'))
       unlikelyButton.triggerEventHandler('click', null)
       fixture.detectChanges();
 
@@ -82,7 +90,7 @@ describe('YnOracle', () => {
   })
 
   it(`should display the correct info when rollPrimary is greater than 0`, () => {
-    const averageButton = fixture.debugElement.queryAll(By.css('button'))[1]
+    const averageButton = fixture.debugElement.query(By.css('#odds1'))
     averageButton.triggerEventHandler('click', null)
     fixture.detectChanges();
 

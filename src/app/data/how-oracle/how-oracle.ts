@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { Oracle } from '../../display/oracle/oracle';
-import { amounts } from '../odds';
+import { amounts } from '../library';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-how-oracle',
-  imports: [],
+  imports: [NgClass],
   templateUrl: './how-oracle.html',
   styleUrls: [
+    '../../../styles/_materialIcons.scss',
     './how-oracle.scss',
     '../../../styles/_oracleDefaults.scss'
   ]
@@ -21,7 +23,7 @@ export class HowOracle extends Oracle {
   descReminder: string = ''
 
   override ngOnInit() {
-
+    super.ngOnInit()
     this.descPrimary = this.oracle.table[0][0][0]
     this.descSecondary = this.oracle.table[0][0][1]
     this.descReminder = this.oracle.table[0][0][2]

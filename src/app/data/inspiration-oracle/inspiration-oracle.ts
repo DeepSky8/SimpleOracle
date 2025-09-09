@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { Oracle } from '../../display/oracle/oracle';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-inspiration-oracle',
-  imports: [CommonModule],
+  imports: [CommonModule, NgClass],
   templateUrl: './inspiration-oracle.html',
   styleUrls: [
+    '../../../styles/_materialIcons.scss',
     './inspiration-oracle.scss',
     '../../../styles/_oracleDefaults.scss'
   ]
@@ -32,6 +33,7 @@ export class InspirationOracle extends Oracle {
   descAdjective: string = ''
 
   override ngOnInit() {
+    super.ngOnInit()
     this.descPrimary = this.oracle.table[0][0][0]
     this.descSecondary = this.oracle.table[0][0][1]
     this.descReminder = this.oracle.table[0][0][2]

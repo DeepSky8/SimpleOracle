@@ -1,6 +1,30 @@
 <div class="oracle--wrapper">
     <div class='oracle--topBox'>
-        <h2 class="oracle--spacer--tiny">{{oracle.title}}</h2>
+        <div class="oracle--title--wrapper ">
+
+            <button class="oracle--pin--width oracle--pin--button material-symbols-outlined"
+                [ngClass]="{'pinned': pinned,'unpinned': !pinned}" (click)="pinThisOracle()">keep</button>
+
+            <h2 class="oracle--spacer--tiny oracle--title--width">{{oracle.title}}</h2>
+
+            <div class="oracle--pin--width ">
+                <div class="oracle--pin--height">
+                    @if(pinned && (pinLength > 1)){
+                    <button (click)="upThisOracle()" class="oracle--pin--button material-icons">
+                        arrow_upward_alt
+                    </button>
+                    }
+                </div>
+                <div class="oracle--pin--height">
+                    @if(pinned && (pinLength > 1)){ <button (click)="downThisOracle()"
+                        class="oracle--pin--button material-icons">
+                        arrow_downward_alt
+                    </button>
+                    }
+                </div>
+            </div>
+
+        </div>
 
         <div class="rollResults--wrapper oracle--spacer--tiny">
             @if (rollPrimary>0) {
@@ -43,7 +67,7 @@
         <div id="descReminder" class=" reminder--italic oracle--spacer--tiny">{{descReminder}}</div>
         }
 
-        <button class="rollButtons" (click)="rollDice()">Generate</button>
+        <button id="generateInspiration" class="rollButtons" (click)="rollDice()">Generate</button>
 
     </div>
 </div>

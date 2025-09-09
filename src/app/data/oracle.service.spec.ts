@@ -1,17 +1,13 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 
-import { HowOracle } from './how-oracle';
-import { IOracle, oracleType } from '../oracle.model';
-import { By } from '@angular/platform-browser';
-import { oracles } from '../oracles';
+import { OraclePinService } from './oracle.service';
+import { oracles } from './oracles';
+import { IOracle, oracleType } from './oracle.model';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { amounts, storageToken, testLocation } from '../library';
-import { OraclePinService } from '../oracle.service';
+import { storageToken, testLocation } from './library';
 
-describe('HowOracle', () => {
-  let component: HowOracle;
-  let fixture: ComponentFixture<HowOracle>;
-  let mockOracleService = jasmine.createSpyObj('OraclePinService', ['getOracles', 'getPinnedLength']);
+describe('Oracle Pin Service', () => {
+  let service: OraclePinService;
   const testOracles: IOracle[] = [
     {
       iID: 0,
@@ -329,93 +325,135 @@ describe('HowOracle', () => {
     },
   ]
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [HowOracle],
-      providers:
-        [
-          provideZonelessChangeDetection(),
-          { provide: storageToken, useValue: testLocation },
-          { provide: OraclePinService, useValue: mockOracleService },
-        ]
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideZonelessChangeDetection(),
+        { provide: storageToken, useValue: testLocation }
+      ]
     })
       .compileComponents();
 
-    fixture = TestBed.createComponent(HowOracle);
-    fixture.componentRef.setInput('oracle', testOracles[1]);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    localStorage.removeItem(testLocation)
+
+    service = TestBed.inject(OraclePinService);
+    service.pin(0, testLocation);
+
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should be created', () => {
+    expect(service).toBeTruthy();
   });
 
-  it("should only generate on type 'singleroll'", () => {
-    expect(component.oracle.type).toEqual(oracleType.singleroll)
-  })
-
-  it(`should set/display the higher of two numbers as 'rollPrimary' when 'likely' is rolled`,
-    () => {
-      const likelyButton = fixture.debugElement.query(By.css(`#generateHow0`))
-      likelyButton.triggerEventHandler('click', null)
-      fixture.detectChanges();
-
-      expect(component.rollPrimary).toBeGreaterThanOrEqual(component.rollSecondary)
-      expect(fixture.debugElement.query(By.css('#rollPrimary')).nativeElement.textContent).toContain(`Rolled: ${component.rollPrimary}`)
-      expect(fixture.debugElement.query(By.css('#rollSecondary')).nativeElement.textContent).toContain(`(and ${component.rollSecondary})`)
+  it(`should set oracleOrder when constructed`, () => {
+    service.getOracles().subscribe((oracleArray) => {
+      expect(oracleArray.length).toEqual(oracles.length);
     })
+  })
 
-  it(`should generate/display a single number as 'rollPrimary' when 'average' is rolled`,
-    () => {
-      const averageButton = fixture.debugElement.query(By.css(`#generateHow1`))
-      averageButton.triggerEventHandler('click', null)
-      fixture.detectChanges();
 
-      expect(component.rollPrimary).toBeGreaterThan(0);
-      expect(component.rollSecondary).toEqual(0);
-      expect(fixture.debugElement.query(By.css('#rollPrimary')).nativeElement.textContent).toContain(`Rolled: ${component.rollPrimary}`)
-      expect(fixture.nativeElement.querySelector('#rollSecondary')).toEqual(null)
+  it(`should set pinnedLength correctly`, () => {
+    // let oracleArray: IOracle[];
+    // let oraclesPinned: number;
 
+    // service.getOracles().subscribe((array) => {
+    //   oracleArray = array;
+    //   oraclesPinned = array.filter(oracle => oracle.pinned).length
+    // })
+    service.getPinnedLength().subscribe((returnedLength) => {
+      expect(returnedLength).toEqual(1)
     })
-
-  it(`should set/display the lower of two numbers as 'rollPrimary' when 'unlikely' is rolled`,
-    () => {
-      const unlikelyButton = fixture.debugElement.query(By.css(`#generateHow2`))
-      unlikelyButton.triggerEventHandler('click', null)
-      fixture.detectChanges();
-
-      expect(component.rollSecondary).toBeGreaterThanOrEqual(component.rollPrimary)
-      expect(fixture.debugElement.query(By.css('#rollPrimary')).nativeElement.textContent).toContain(`Rolled: ${component.rollPrimary}`)
-      expect(fixture.debugElement.query(By.css('#rollSecondary')).nativeElement.textContent).toContain(`(and ${component.rollSecondary})`)
-    })
-
-
-  it(`should display the Oracle title`, () => {
-    expect(fixture.debugElement.query(By.css('h2')).nativeElement.textContent).toEqual(oracles[1].title)
   })
 
-  it(`should display introduction info when first loaded (rollPrimary is 0)`, () => {
-    expect(component.descPrimary).toEqual(oracles[1].table[0][0][0])
-    expect(fixture.debugElement.query(By.css('#descPrimary')).nativeElement.textContent).toEqual(oracles[1].table[0][0][0])
+  // it(`should store pinned state`, () => {
+  //   service.getOracles().subscribe((oracleArray) => {
 
-    expect(component.descSecondary).toEqual(oracles[1].table[0][0][1])
-    expect(fixture.debugElement.query(By.css('#descSecondary')).nativeElement.textContent).toEqual(oracles[1].table[0][0][1])
+  //     const pinned  = oracleArray.filter(oracle => oracle.pinned).length
 
-    expect(component.descReminder).toEqual(oracles[1].table[0][0][2])
-    expect(fixture.debugElement.query(By.css('#descReminder')).nativeElement.textContent).toEqual(oracles[1].table[0][0][2])
+  //     expect(pinned).toBe(1)
+  //     expect(service.getPinnedStatus(0)).toEqual(true)
+  //   })
+
+  // })
+
+  it(`should sort pinned oracles before unpinned, then by title`, () => {
+    const sortedOracles = service.sortOracles(testOracles)
+    expect(sortedOracles[0].pinned).toBe(true)
+    expect(sortedOracles[1].pinned).toBe(false)
+    expect(sortedOracles[2].pinned).toBe(false)
+    expect(sortedOracles.map(oracle => oracle.title)).toEqual(['Inspiration', 'Magnitude', 'Yes/No'])
   })
 
-  it(`should display the correct info when rollPrimary is greater than 0`, () => {
-    const averageButton = fixture.debugElement.query(By.css(`#generateHow1`))
-    averageButton.triggerEventHandler('click', null)
-    fixture.detectChanges();
-
-    const rollPrimary = component.rollPrimary
-
-    expect(component.descPrimary).toEqual(oracles[1].table[0][rollPrimary][0])
-    expect(component.descSecondary).toEqual(oracles[1].table[0][rollPrimary][1])
-    expect(component.descReminder).toEqual(oracles[1].table[0][rollPrimary][2])
+  it(`should set 'currentPosition' to index value`, () => {
+    const indexedOracles = service.setCurrentPositionToIndex(testOracles)
+    expect(indexedOracles[0].currentPosition).toEqual(0)
+    expect(indexedOracles[1].currentPosition).toEqual(1)
+    expect(indexedOracles[2].currentPosition).toEqual(2)
   })
+
+  // it(`should reorder the submitted oracle by reducing the currentPosition`, () => {
+  //   service.pin(1, testLocation)
+  //   service.getOracles().subscribe((reorderedOracles) => {
+  //     expect(reorderedOracles[0].pinned).toBe(true)
+  //     expect(reorderedOracles[0].currentPosition).toEqual(0)
+  //     expect(reorderedOracles[0].title).toEqual('Inspiration')
+
+  //     expect(reorderedOracles[1].pinned).toBe(true)
+  //     expect(reorderedOracles[1].currentPosition).toEqual(1)
+  //     expect(reorderedOracles[1].title).toEqual('Magnitude')
+
+  //     expect(reorderedOracles[2].pinned).toBe(false)
+  //     expect(reorderedOracles[2].currentPosition).toEqual(2)
+  //     expect(reorderedOracles[2].title).toEqual('Yes/No')
+  //   })
+  //   service.moveUp(1)
+  //   service.getOracles().subscribe((reorderedOracles) => {
+  //     expect(reorderedOracles[0].pinned).toBe(true)
+  //     expect(reorderedOracles[0].currentPosition).toEqual(0)
+  //     expect(reorderedOracles[0].title).toEqual('Magnitude')
+
+  //     expect(reorderedOracles[1].pinned).toBe(true)
+  //     expect(reorderedOracles[1].currentPosition).toEqual(1)
+  //     expect(reorderedOracles[1].title).toEqual('Inspiration')
+
+  //     expect(reorderedOracles[2].pinned).toBe(false)
+  //     expect(reorderedOracles[2].currentPosition).toEqual(2)
+  //     expect(reorderedOracles[2].title).toEqual('Yes/No')
+  //   })
+  // })
+
+  // it(`should reorder the submitted oracle by increasing the currentPosition`, () => {
+  //   service.pin(0, testLocation)
+  //   service.getOracles().subscribe((reorderedOracles) => {
+  //     expect(reorderedOracles[0].pinned).toBe(true)
+  //     expect(reorderedOracles[0].currentPosition).toEqual(0)
+  //     expect(reorderedOracles[0].title).toEqual('Inspiration')
+
+  //     expect(reorderedOracles[1].pinned).toBe(true)
+  //     expect(reorderedOracles[1].currentPosition).toEqual(1)
+  //     expect(reorderedOracles[1].title).toEqual('Magnitude')
+
+  //     expect(reorderedOracles[2].pinned).toBe(false)
+  //     expect(reorderedOracles[2].currentPosition).toEqual(2)
+  //     expect(reorderedOracles[2].title).toEqual('Yes/No')
+  //   })
+  //   service.moveDown(0)
+  //   service.getOracles().subscribe((reorderedOracles) => {
+  //     expect(reorderedOracles[0].pinned).toBe(true)
+  //     expect(reorderedOracles[0].currentPosition).toEqual(0)
+  //     expect(reorderedOracles[0].title).toEqual('Inspiration')
+
+  //     expect(reorderedOracles[1].pinned).toBe(true)
+  //     expect(reorderedOracles[1].currentPosition).toEqual(1)
+  //     expect(reorderedOracles[1].title).toEqual('Magnitude')
+
+  //     expect(reorderedOracles[2].pinned).toBe(false)
+  //     expect(reorderedOracles[2].currentPosition).toEqual(2)
+  //     expect(reorderedOracles[2].title).toEqual('Yes/No')
+  //   })
+  // })
+
+
 
 });

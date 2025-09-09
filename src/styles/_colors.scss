@@ -8,6 +8,7 @@ $headerTextColor: #e2ddc8;
 // $bodyBackground: color.adjust(#242424, $lightness: -2%);
 $bodyBackground: #252526;
 $bodyTextColor: #e2ddc8;
+$bodyTextColorFaded: color.adjust(#e2ddc8, $alpha: -0.50);
 
 $shadowBlack: black;
 

@@ -1,11 +1,14 @@
-import { odds } from "./odds";
 import { IOracle } from "./oracle.model";
 import { oracleType } from "./oracle.model";
 
 export const oracles: IOracle[] = [
     {
+        iID: 0,
         title: "Yes/No",
+        defaultPosition: 0,
+        currentPosition: 0,
         type: oracleType.yesNo,
+        pinned: false,
         table: [
             // Row Zero
             [
@@ -127,8 +130,12 @@ export const oracles: IOracle[] = [
         },
     },
     {
+        iID: 1,
         title: "Magnitude",
-        type: oracleType.magnitude,
+        type: oracleType.singleroll,
+        defaultPosition: 1,
+        currentPosition: 1,
+        pinned: false,
         table: [
             // Row Zero
             [
@@ -188,8 +195,12 @@ export const oracles: IOracle[] = [
         },
     },
     {
+        iID: 2,
         title: "Inspiration",
-        type: oracleType.inspiration,
+        type: oracleType.multiroll,
+        defaultPosition: 2,
+        currentPosition: 2,
+        pinned: false,
         table: [
             // Row Zero
             [
