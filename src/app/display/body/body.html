@@ -1,14 +1,15 @@
 <div class="wrapper">
+  <app-searchbar />
   <ul>
     @for (oracle of oracles; track oracle.iID) {
-      <li class="">
-            <ng-container *ngComponentOutlet="
+    <li class="">
+      <ng-container *ngComponentOutlet="
             componentSelector(oracle);
             inputs: {oracle, pinLength};
             " />
-        </li>
-      }
+    </li>
+    }
 
-    </ul>
+  </ul>
 
-  </div>
+</div>

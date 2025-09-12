@@ -1,0 +1,43 @@
+@use "../../../styles/sizes";
+@use "../../../styles/colors";
+
+.wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-top: 1em;
+    margin-bottom: 1.5em;
+    justify-content: center;
+}
+
+.label--styling {
+    padding-right: 0px;
+}
+
+#oracleSearch {
+    width: 100%;
+    // height: 3em;
+    font-size: 1.5em;
+    background-color: colors.$searchBackgroundUnfocused;
+    color: colors.$searchUnfocused;
+    text-align: center;
+    border-style: solid;
+    border-color: colors.$searchUnfocused;
+    border-radius: 25px;
+    &::placeholder {
+        color: colors.$searchUnfocused;
+    }
+}
+#oracleSearch:focus {
+    background-color: colors.$searchBackgroundFocused;
+    outline-color: colors.$searchOutlineColor;
+    &::placeholder {
+        color: colors.$searchText;
+    }
+}
+
+@media only screen and (min-device-width: sizes.$tablet-breakpoint) {
+    .label--styling {
+        padding-right: 10px;
+    }
+}

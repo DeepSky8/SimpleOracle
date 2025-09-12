@@ -8,6 +8,7 @@ export interface IOracle {
     currentPosition: number,
     pinned: boolean,
     table: string[][][],
+    tags: string[],
     rollCaps: IRoll,
 }
 

@@ -6,10 +6,11 @@ import { NgComponentOutlet } from '@angular/common';
 import { HowOracle } from '../../data/how-oracle/how-oracle';
 import { InspirationOracle } from '../../data/inspiration-oracle/inspiration-oracle';
 import { OraclePinService } from '../../data/oracle.service';
+import { Searchbar } from "../searchbar/searchbar";
 
 @Component({
   selector: 'app-body',
-  imports: [NgComponentOutlet],
+  imports: [NgComponentOutlet, Searchbar],
   templateUrl: './body.html',
   styleUrl: './body.scss'
 })

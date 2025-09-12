@@ -119,6 +119,7 @@ export const oracles: IOracle[] = [
             ]
 
         ],
+        tags: [],
         rollCaps: {
             rollOneMax: 6, // Primary
             rollTwoMax: 6, // Secondary
@@ -184,6 +185,7 @@ export const oracles: IOracle[] = [
             ],
 
         ],
+        tags: [],
         rollCaps: {
             rollOneMax: 6, // Primary
             rollTwoMax: 6, // Secondary
@@ -306,6 +308,7 @@ export const oracles: IOracle[] = [
             ]
 
         ],
+        tags: [],
         rollCaps: {
             rollOneMax: 6, // All rolls for this oracle are capped at 6
             rollTwoMax: 0,
