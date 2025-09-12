@@ -31,6 +31,7 @@
 #oracleSearch:focus {
     background-color: colors.$searchBackgroundFocused;
     outline-color: colors.$searchOutlineColor;
+    color: colors.$searchText;
     &::placeholder {
         color: colors.$searchText;
     }
