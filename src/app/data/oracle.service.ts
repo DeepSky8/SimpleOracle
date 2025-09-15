@@ -155,8 +155,8 @@ export class OraclePinService {
     let unpinned = oracles.filter(({ pinned }) => !pinned)
     let result: IOracle[];
 
-    const targetIndex = oracles.findIndex(item => item.iID === oracleID)
-    const targetItem = oracles.slice(targetIndex, targetIndex + 1)
+    const targetIndex = pinned.findIndex(item => item.iID === oracleID)
+    const targetItem = pinned.slice(targetIndex, targetIndex + 1)
     if (targetIndex < pinned.length - 1) {
       result = pinned
         .toSpliced(targetIndex + 2, 0, targetItem[0])
@@ -168,7 +168,6 @@ export class OraclePinService {
         .toSpliced(0, 0, targetItem[0])
         .concat(unpinned)
     }
-
     return this.setCurrentPositionToIndex(result)
 
   }
@@ -182,7 +181,6 @@ export class OraclePinService {
   }
 
   private applyTextFilter(oracles: IOracle[], searchText: string): IOracle[] {
-    console.log('searchText', searchText)
     if (searchText.length === 0) {
       return oracles
     } else {

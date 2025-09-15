@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Searchbar } from './searchbar';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('Searchbar', () => {
   let component: Searchbar;
@@ -8,9 +9,13 @@ describe('Searchbar', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Searchbar]
+      imports: [Searchbar],
+      providers: [
+        provideZonelessChangeDetection(),
+
+      ]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(Searchbar);
     component = fixture.componentInstance;
