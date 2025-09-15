@@ -80,6 +80,11 @@ export class OraclePinService {
     this.pushOracles(this.oracleAll, this.storageLocation, trimmed)
   }
 
+  clearSearchText() {
+    this.searchText = '';
+    this.pushOracles(this.oracleAll, this.storageLocation, '')
+  }
+
   getPinnedLength(): Observable<number> {
     return this.pinnedLength.asObservable();
   }
