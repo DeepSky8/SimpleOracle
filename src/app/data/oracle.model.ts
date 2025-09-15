@@ -17,4 +17,5 @@ export enum oracleType {
     yesNo = 'yesNo',
     singleroll = 'singleroll',
     multiroll = 'multiroll',
+    cascading = 'cascading'
 }

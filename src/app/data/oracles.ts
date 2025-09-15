@@ -119,7 +119,7 @@ export const oracles: IOracle[] = [
             ]
 
         ],
-        tags: [],
+        tags: ['simple', 'yes', 'no', 'yes/no'],
         rollCaps: {
             rollOneMax: 6, // Primary
             rollTwoMax: 6, // Secondary
@@ -185,7 +185,7 @@ export const oracles: IOracle[] = [
             ],
 
         ],
-        tags: [],
+        tags: ['simple', 'how', 'much', 'how much'],
         rollCaps: {
             rollOneMax: 6, // Primary
             rollTwoMax: 6, // Secondary
@@ -308,9 +308,73 @@ export const oracles: IOracle[] = [
             ]
 
         ],
-        tags: [],
+        tags: ['simple', 'how', 'way', 'what'],
         rollCaps: {
             rollOneMax: 6, // All rolls for this oracle are capped at 6
+            rollTwoMax: 0,
+            rollThreeMax: 0,
+            rollFourMax: 0,
+            rollFiveMax: 0,
+            rollSixMax: 0,
+            rollSevenMax: 0,
+        },
+    },
+    {
+        iID: 3,
+        title: "Cascading",
+        type: oracleType.cascading,
+        defaultPosition: 3,
+        currentPosition: 3,
+        pinned: false,
+        table: [
+            // Row Zero
+            [
+                [
+                    // Entry Zero - only displayed during intro
+                    "Attempt task with a 'Yes/No' question",
+                    "Ask a skill-based question",
+                    "Evaluate the likelihood",
+                ],
+                [
+                    // Entry One
+                    'No',
+                    "You fail, possibly due to lack of skill",
+                    "It may be impossible/not exist"
+                ],
+                [
+                    // Entry Two
+                    'Yes',
+                    "You succeed",
+                    "Proceed to ask a world/narrative-based question"
+                ],
+            ],
+            // Row One
+            [
+                [
+                    '' // Never displayed
+                    // "Ask a world/narrative-based question 'Yes/No' question",
+                    // "Evaluate the likelihood",
+                    // "Tap here to roll"
+                ],
+                [
+                    // Entry One
+                    'No',
+                    "You fail",
+                    "Success may not have been possible"
+                ],
+                [
+                    // Entry Two
+                    'Yes',
+                    "Now roll on tables or use narrative",
+                    "Search 'Cascading' to display several tables suitable for results"
+                ],
+
+            ],
+
+        ],
+        tags: ['complex', 'yes', 'no', 'yes/no', 'cascading'],
+        rollCaps: {
+            rollOneMax: 2, // All rolls for this oracle are capped at 2
             rollTwoMax: 0,
             rollThreeMax: 0,
             rollFourMax: 0,
