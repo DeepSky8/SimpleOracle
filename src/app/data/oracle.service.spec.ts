@@ -126,6 +126,8 @@ describe('Oracle Pin Service', () => {
         ]
 
       ],
+      tags: [],
+
       rollCaps: {
         rollOneMax: 6, // Primary
         rollTwoMax: 6, // Secondary
@@ -191,6 +193,8 @@ describe('Oracle Pin Service', () => {
         ],
 
       ],
+      tags: [],
+
       rollCaps: {
         rollOneMax: 6, // Primary
         rollTwoMax: 6, // Secondary
@@ -313,6 +317,7 @@ describe('Oracle Pin Service', () => {
         ]
 
       ],
+      tags: [],
       rollCaps: {
         rollOneMax: 6, // All rolls for this oracle are capped at 6
         rollTwoMax: 0,
@@ -326,8 +331,8 @@ describe('Oracle Pin Service', () => {
   ]
 
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       providers: [
         provideZonelessChangeDetection(),
         { provide: storageToken, useValue: testLocation }
@@ -336,9 +341,11 @@ describe('Oracle Pin Service', () => {
       .compileComponents();
 
     localStorage.removeItem(testLocation)
+    localStorage.setItem(testLocation, JSON.stringify(testOracles))
 
     service = TestBed.inject(OraclePinService);
-    service.pin(0, testLocation);
+    // service.pin(0);
+    // service.pin(1);
 
   });
 
@@ -353,32 +360,18 @@ describe('Oracle Pin Service', () => {
   })
 
 
-  it(`should set pinnedLength correctly`, () => {
-    // let oracleArray: IOracle[];
-    // let oraclesPinned: number;
-
-    // service.getOracles().subscribe((array) => {
-    //   oracleArray = array;
-    //   oraclesPinned = array.filter(oracle => oracle.pinned).length
-    // })
-    service.getPinnedLength().subscribe((returnedLength) => {
-      expect(returnedLength).toEqual(1)
-    })
+  it(`should get pinnedLength correctly`, () => {
+    expect(service['pinnedLength'].getValue()).toEqual(1)
   })
 
-  // it(`should store pinned state`, () => {
-  //   service.getOracles().subscribe((oracleArray) => {
+  it('should set search text', () => {
+    service.setSearchText('mag');
+    expect(service["searchText"]).toEqual('mag')
 
-  //     const pinned  = oracleArray.filter(oracle => oracle.pinned).length
-
-  //     expect(pinned).toBe(1)
-  //     expect(service.getPinnedStatus(0)).toEqual(true)
-  //   })
-
-  // })
+  })
 
   it(`should sort pinned oracles before unpinned, then by title`, () => {
-    const sortedOracles = service.sortOracles(testOracles)
+    const sortedOracles = service["oracleAll"]
     expect(sortedOracles[0].pinned).toBe(true)
     expect(sortedOracles[1].pinned).toBe(false)
     expect(sortedOracles[2].pinned).toBe(false)
@@ -386,73 +379,49 @@ describe('Oracle Pin Service', () => {
   })
 
   it(`should set 'currentPosition' to index value`, () => {
-    const indexedOracles = service.setCurrentPositionToIndex(testOracles)
+    const indexedOracles = service["oracleAll"]
     expect(indexedOracles[0].currentPosition).toEqual(0)
     expect(indexedOracles[1].currentPosition).toEqual(1)
     expect(indexedOracles[2].currentPosition).toEqual(2)
   })
 
-  // it(`should reorder the submitted oracle by reducing the currentPosition`, () => {
-  //   service.pin(1, testLocation)
-  //   service.getOracles().subscribe((reorderedOracles) => {
-  //     expect(reorderedOracles[0].pinned).toBe(true)
-  //     expect(reorderedOracles[0].currentPosition).toEqual(0)
-  //     expect(reorderedOracles[0].title).toEqual('Inspiration')
+  it(`should reorder the submitted oracle by reducing the currentPosition`, () => {
+    service.pin(1)
+    service.moveUp(1)
+    service.getOracles().subscribe((reorderedOracles) => {
 
-  //     expect(reorderedOracles[1].pinned).toBe(true)
-  //     expect(reorderedOracles[1].currentPosition).toEqual(1)
-  //     expect(reorderedOracles[1].title).toEqual('Magnitude')
+      expect(reorderedOracles[0].pinned).toBe(true)
+      expect(reorderedOracles[0].currentPosition).toEqual(0)
+      expect(reorderedOracles[0].title).toEqual('Magnitude')
 
-  //     expect(reorderedOracles[2].pinned).toBe(false)
-  //     expect(reorderedOracles[2].currentPosition).toEqual(2)
-  //     expect(reorderedOracles[2].title).toEqual('Yes/No')
-  //   })
-  //   service.moveUp(1)
-  //   service.getOracles().subscribe((reorderedOracles) => {
-  //     expect(reorderedOracles[0].pinned).toBe(true)
-  //     expect(reorderedOracles[0].currentPosition).toEqual(0)
-  //     expect(reorderedOracles[0].title).toEqual('Magnitude')
+      expect(reorderedOracles[1].pinned).toBe(true)
+      expect(reorderedOracles[1].currentPosition).toEqual(1)
+      expect(reorderedOracles[1].title).toEqual('Inspiration')
 
-  //     expect(reorderedOracles[1].pinned).toBe(true)
-  //     expect(reorderedOracles[1].currentPosition).toEqual(1)
-  //     expect(reorderedOracles[1].title).toEqual('Inspiration')
+      expect(reorderedOracles[2].pinned).toBe(false)
+      expect(reorderedOracles[2].currentPosition).toEqual(2)
+      expect(reorderedOracles[2].title).toEqual('Yes/No')
+    })
 
-  //     expect(reorderedOracles[2].pinned).toBe(false)
-  //     expect(reorderedOracles[2].currentPosition).toEqual(2)
-  //     expect(reorderedOracles[2].title).toEqual('Yes/No')
-  //   })
-  // })
+  })
 
-  // it(`should reorder the submitted oracle by increasing the currentPosition`, () => {
-  //   service.pin(0, testLocation)
-  //   service.getOracles().subscribe((reorderedOracles) => {
-  //     expect(reorderedOracles[0].pinned).toBe(true)
-  //     expect(reorderedOracles[0].currentPosition).toEqual(0)
-  //     expect(reorderedOracles[0].title).toEqual('Inspiration')
+  it(`should reorder the submitted oracle by increasing the currentPosition`, () => {
+    service.pin(1)
+    service.moveDown(2)
+    service.getOracles().subscribe((reorderedOracles) => {
+      expect(reorderedOracles[0].pinned).toBe(true)
+      expect(reorderedOracles[0].currentPosition).toEqual(0)
+      expect(reorderedOracles[0].title).toEqual('Magnitude')
 
-  //     expect(reorderedOracles[1].pinned).toBe(true)
-  //     expect(reorderedOracles[1].currentPosition).toEqual(1)
-  //     expect(reorderedOracles[1].title).toEqual('Magnitude')
+      expect(reorderedOracles[1].pinned).toBe(true)
+      expect(reorderedOracles[1].currentPosition).toEqual(1)
+      expect(reorderedOracles[1].title).toEqual('Inspiration')
 
-  //     expect(reorderedOracles[2].pinned).toBe(false)
-  //     expect(reorderedOracles[2].currentPosition).toEqual(2)
-  //     expect(reorderedOracles[2].title).toEqual('Yes/No')
-  //   })
-  //   service.moveDown(0)
-  //   service.getOracles().subscribe((reorderedOracles) => {
-  //     expect(reorderedOracles[0].pinned).toBe(true)
-  //     expect(reorderedOracles[0].currentPosition).toEqual(0)
-  //     expect(reorderedOracles[0].title).toEqual('Inspiration')
-
-  //     expect(reorderedOracles[1].pinned).toBe(true)
-  //     expect(reorderedOracles[1].currentPosition).toEqual(1)
-  //     expect(reorderedOracles[1].title).toEqual('Magnitude')
-
-  //     expect(reorderedOracles[2].pinned).toBe(false)
-  //     expect(reorderedOracles[2].currentPosition).toEqual(2)
-  //     expect(reorderedOracles[2].title).toEqual('Yes/No')
-  //   })
-  // })
+      expect(reorderedOracles[2].pinned).toBe(false)
+      expect(reorderedOracles[2].currentPosition).toEqual(2)
+      expect(reorderedOracles[2].title).toEqual('Yes/No')
+    })
+  })
 
 
 

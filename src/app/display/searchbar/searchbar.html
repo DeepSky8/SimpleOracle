@@ -1,0 +1,8 @@
+<div class="wrapper">
+    <h2 class="label--styling" for="oracleSearch">Search Oracles</h2>
+    <div class="inputAndReset">
+        <input id="oracleSearch" type="text" placeholder="Title or tag" [(ngModel)]="searchText"
+            (input)="onInputChange($event)" />
+        <button id="resetSearch" (click)="onResetClick()">Reset</button>
+    </div>
+</div>

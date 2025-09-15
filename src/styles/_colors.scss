@@ -8,9 +8,16 @@ $headerTextColor: #e2ddc8;
 // $bodyBackground: color.adjust(#242424, $lightness: -2%);
 $bodyBackground: #252526;
 $bodyTextColor: #e2ddc8;
-$bodyTextColorFaded: color.adjust(#e2ddc8, $alpha: -0.50);
+$bodyTextColorFaded: color.adjust(#e2ddc8, $alpha: -0.5);
 
 $shadowBlack: black;
 
 $oracleOutline: #e2ddc8;
 $oracleBackground: #242424;
+
+$searchBackgroundUnfocused: color.adjust($bodyBackground, $lightness: 5%);
+$searchUnfocused: #a6a294;
+
+$searchBackgroundFocused: color.adjust($bodyBackground, $lightness: 25%);
+$searchText: #252526;
+$searchOutlineColor: #e2ddc8;

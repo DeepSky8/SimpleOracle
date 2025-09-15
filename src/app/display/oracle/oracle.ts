@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { IOracle } from '../../data/oracle.model';
 import { OraclePinService } from '../../data/oracle.service';
-import { storage } from '../../data/library';
 
 @Component({
   selector: 'app-oracle',
@@ -36,7 +35,7 @@ export class Oracle {
   rollDice(parameter?: string): void { }
 
   pinThisOracle(): void {
-    this.oraclePinService.pin(this.oracle.iID, storage.local);
+    this.oraclePinService.pin(this.oracle.iID);
     this.pinned = !this.pinned;
   }
 

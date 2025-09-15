@@ -8,11 +8,10 @@ import { storageToken } from './library';
   providedIn: 'root'
 })
 export class OraclePinService {
-  private oracleOrder: BehaviorSubject<IOracle[]> = new BehaviorSubject<IOracle[]>(
-    []
-  );
+  private oracleOrder: BehaviorSubject<IOracle[]> = new BehaviorSubject<IOracle[]>([]);
+  private oracleAll: IOracle[];
   private pinnedLength: BehaviorSubject<number> = new BehaviorSubject<number>(0);
-
+  private searchText: string = '';
 
   constructor(
     @Inject(storageToken) private readonly storageLocation: string,
@@ -43,28 +42,48 @@ export class OraclePinService {
         }
       })
 
-      this.oracleOrder.next(this.sortOracles(compared));
+      const sorted = this.sortOracles(compared)
+      this.oracleOrder.next(sorted);
+      this.oracleAll = sorted;
       const pinnedOnlyLength = compared.filter(oracle => oracle.pinned).length
       this.pinnedLength.next(pinnedOnlyLength)
 
     } else {
       this.oracleOrder.next(oracles);
+      this.oracleAll = oracles;
     }
   }
 
-  storeLocally(oracleState: IOracle[], key: string): void {
+  private storeLocally(oracleState: IOracle[], key: string): void {
     const packed = JSON.stringify(oracleState)
     localStorage.setItem(key, packed)
   }
 
-  checkLocalStore(localStorageKey: string): string | null {
+  private checkLocalStore(localStorageKey: string): string | null {
     return localStorage.getItem(localStorageKey)
+  }
+
+  private pushOracles(oracles: IOracle[], localStorageKey: string, searchText: string): void {
+
+    this.oracleOrder.next(this.applyTextFilter(oracles, searchText))
+    this.storeLocally(oracles, localStorageKey)
+
   }
 
   getOracles(): Observable<IOracle[]> {
     return this.oracleOrder.asObservable();
   }
 
+  setSearchText(text: string): void {
+    const trimmed = text.toLowerCase().trim()
+    this.searchText = trimmed;
+    this.pushOracles(this.oracleAll, this.storageLocation, trimmed)
+  }
+
+  clearSearchText() {
+    this.searchText = '';
+    this.pushOracles(this.oracleAll, this.storageLocation, '')
+  }
 
   getPinnedLength(): Observable<number> {
     return this.pinnedLength.asObservable();
@@ -80,20 +99,106 @@ export class OraclePinService {
 
   }
 
-  pin(oracleID: number, localStorageKey: string): void {
-    let currentOrder = this.oracleOrder.getValue()
+  private setPinStatus(oracleID: number): IOracle[] {
+    let currentOrder = this.oracleAll;
+    let result: IOracle[] = [];
 
-    let foundOracle = this.oracleOrder.getValue().find(oracle => oracle.iID === oracleID)
+    let foundOracle = currentOrder.find(oracle => oracle.iID === oracleID)
     if (foundOracle) {
       foundOracle.pinned = !foundOracle.pinned;
-      const filteredOracles = currentOrder.filter(oracle => oracle.iID !== oracleID)
-      const result = this.sortOracles(filteredOracles.concat(foundOracle))
-      this.storeLocally(result, localStorageKey)
-      this.oracleOrder.next(result)
+      const remainingOracles = currentOrder.filter(oracle => oracle.iID !== oracleID)
+      const reorderedAllOracles = this.setCurrentPositionToIndex(this.sortOracles(remainingOracles.concat(foundOracle)))
+      result = this.applyTextFilter(reorderedAllOracles, this.searchText)
+
+    }
+    return result
+  }
+
+  pin(oracleID: number): void {
+    this.pushOracles(this.setPinStatus(oracleID), this.storageLocation, this.searchText)
+  }
+
+
+
+  private setCurrentPositionToIndex(oracles: IOracle[]): IOracle[] {
+    return oracles.map((oracle, i) => ({ ...oracle, currentPosition: i }))
+  }
+
+  private moveOracleUp(oracleID: number, oracles: IOracle[]): IOracle[] {
+
+    let pinned = oracles.filter(({ pinned }) => pinned)
+    let unpinned = oracles.filter(({ pinned }) => !pinned)
+    let result: IOracle[];
+
+    const targetIndex = pinned.findIndex(item => item.iID === oracleID)
+    const targetItem = pinned.slice(targetIndex, targetIndex + 1)
+    if (targetIndex > 0) {
+      result = pinned
+        .toSpliced(targetIndex, 1)
+        .toSpliced(targetIndex - 1, 0, targetItem[0])
+        .concat(unpinned)
+    } else {
+      result = pinned
+        .toSpliced(targetIndex, 1)
+        .toSpliced(pinned.length - 1, 0, targetItem[0])
+        .concat(unpinned)
+    }
+
+    return this.setCurrentPositionToIndex(result)
+
+  }
+
+  moveUp(oracleID: number): void {
+    const result = this.moveOracleUp(oracleID, this.oracleAll)
+
+    this.oracleAll = result
+    this.pushOracles(result, this.storageLocation, this.searchText)
+  }
+
+  private moveOracleDown(oracleID: number, oracles: IOracle[]): IOracle[] {
+    let pinned = oracles.filter(({ pinned }) => pinned)
+    let unpinned = oracles.filter(({ pinned }) => !pinned)
+    let result: IOracle[];
+
+    const targetIndex = pinned.findIndex(item => item.iID === oracleID)
+    const targetItem = pinned.slice(targetIndex, targetIndex + 1)
+    if (targetIndex < pinned.length - 1) {
+      result = pinned
+        .toSpliced(targetIndex + 2, 0, targetItem[0])
+        .toSpliced(targetIndex, 1)
+        .concat(unpinned)
+    } else {
+      result = pinned
+        .toSpliced(targetIndex, 1)
+        .toSpliced(0, 0, targetItem[0])
+        .concat(unpinned)
+    }
+    return this.setCurrentPositionToIndex(result)
+
+  }
+
+  moveDown(oracleID: number): void {
+    const result = this.moveOracleDown(oracleID, this.oracleAll)
+
+    this.oracleAll = result
+    this.pushOracles(result, this.storageLocation, this.searchText)
+
+  }
+
+  private applyTextFilter(oracles: IOracle[], searchText: string): IOracle[] {
+    if (searchText.length === 0) {
+      return oracles
+    } else {
+      return oracles.filter(oracle => {
+        const inTitle = oracle.title.toLowerCase().includes(searchText)
+        const inTags = oracle.tags.filter(tag => tag.toLowerCase().includes(searchText)).length > 0
+        return (inTitle || inTags)
+      })
+
     }
   }
 
-  sortOracles(oracles: IOracle[]): IOracle[] {
+  private sortOracles(oracles: IOracle[]): IOracle[] {
     const unpinnedSorted: IOracle[] = oracles
       .filter(oracle => !oracle.pinned)
       .sort((a, b) => {
@@ -107,65 +212,5 @@ export class OraclePinService {
     this.pinnedLength.next(pinnedSorted.length)
 
     return this.setCurrentPositionToIndex(pinnedSorted.concat(unpinnedSorted))
-  }
-
-  setCurrentPositionToIndex(oracles: IOracle[]): IOracle[] {
-    return oracles.map((oracle, i) => ({ ...oracle, currentPosition: i }))
-  }
-
-  moveUp(oracleID: number): void {
-    let currentOrder = this.oracleOrder.getValue()
-    let pinned = currentOrder.filter(({ pinned }) => pinned)
-    let unpinned = currentOrder.filter(({ pinned }) => !pinned)
-    let result: IOracle[];
-
-    const targetIndex = pinned.findIndex(item => item.iID === oracleID)
-    const targetItem = pinned.slice(targetIndex, targetIndex + 1)
-    if (targetIndex > 0) {
-      result = this.setCurrentPositionToIndex(
-        pinned
-          .toSpliced(targetIndex, 1)
-          .toSpliced(targetIndex - 1, 0, targetItem[0])
-          .concat(unpinned)
-      )
-
-    } else {
-      result = this.setCurrentPositionToIndex(
-        pinned
-          .toSpliced(targetIndex, 1)
-          .toSpliced(pinned.length - 1, 0, targetItem[0])
-          .concat(unpinned)
-      )
-    }
-    this.storeLocally(result, this.storageLocation);
-    this.oracleOrder.next(result);
-  }
-
-  moveDown(oracleID: number): void {
-    let currentOrder = this.oracleOrder.getValue()
-    let pinned = currentOrder.filter(({ pinned }) => pinned)
-    let unpinned = currentOrder.filter(({ pinned }) => !pinned)
-    let result: IOracle[];
-
-    const targetIndex = currentOrder.findIndex(item => item.iID === oracleID)
-    const targetItem = currentOrder.slice(targetIndex, targetIndex + 1)
-    if (targetIndex < pinned.length - 1) {
-      result = this.setCurrentPositionToIndex(
-        pinned
-          .toSpliced(targetIndex + 2, 0, targetItem[0])
-          .toSpliced(targetIndex, 1)
-          .concat(unpinned)
-      )
-
-    } else {
-      result = this.setCurrentPositionToIndex(
-        pinned
-          .toSpliced(targetIndex, 1)
-          .toSpliced(0, 0, targetItem[0])
-          .concat(unpinned)
-      )
-    }
-    this.storeLocally(result, this.storageLocation);
-    this.oracleOrder.next(result);
   }
 }
