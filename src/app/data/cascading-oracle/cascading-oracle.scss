@@ -1,0 +1,25 @@
+@use "../../../styles//sizes";
+
+.rollButtons {
+    width: 100%;
+}
+
+.reminder--italic {
+    font-style: italic;
+}
+
+.rollResults--wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.rollResults--text--spacer {
+    padding-left: 5px;
+}
+
+@media only screen and (min-device-width: sizes.$desktop-breakpoint) {
+    .rollButtons {
+        width: 90%;
+    }
+}

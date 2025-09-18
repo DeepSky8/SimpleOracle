@@ -55,8 +55,14 @@ export class OraclePinService {
   }
 
   private storeLocally(oracleState: IOracle[], key: string): void {
-    const packed = JSON.stringify(oracleState)
-    localStorage.setItem(key, packed)
+    const anyPinned = oracleState.filter(({ pinned }) => pinned).length > 0
+    if (anyPinned) {
+      const packed = JSON.stringify(oracleState)
+      localStorage.setItem(key, packed)
+    } else {
+      const packed = JSON.stringify(this.oracleAll)
+      localStorage.setItem(packed, key)
+    }
   }
 
   private checkLocalStore(localStorageKey: string): string | null {

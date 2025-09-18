@@ -7,6 +7,7 @@ import { HowOracle } from '../../data/how-oracle/how-oracle';
 import { InspirationOracle } from '../../data/inspiration-oracle/inspiration-oracle';
 import { OraclePinService } from '../../data/oracle.service';
 import { Searchbar } from "../searchbar/searchbar";
+import { CascadingOracle } from '../../data/cascading-oracle/cascading-oracle';
 
 @Component({
   selector: 'app-body',
@@ -39,6 +40,9 @@ export class Body {
       }
       case oracleType.multiroll: {
         return InspirationOracle
+      }
+      case oracleType.cascading: {
+        return CascadingOracle
       }
       default: {
         return YnOracle
