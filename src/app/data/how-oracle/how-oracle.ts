@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { Oracle } from '../../display/oracle/oracle';
 import { amounts } from '../library';
-import { NgClass } from '@angular/common';
+import { OracleHeader } from "../oracle-header/oracle-header";
 
 @Component({
   selector: 'app-how-oracle',
-  imports: [NgClass],
+  imports: [OracleHeader],
   templateUrl: './how-oracle.html',
   styleUrls: [
     '../../../styles/_materialIcons.scss',

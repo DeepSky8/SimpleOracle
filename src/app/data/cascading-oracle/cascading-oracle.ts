@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { Oracle } from '../../display/oracle/oracle';
-import { NgClass } from '@angular/common';
 import { odds } from '../library';
+import { OracleHeader } from "../oracle-header/oracle-header";
 
 @Component({
   selector: 'app-cascading-oracle',
-  imports: [NgClass],
+  imports: [OracleHeader],
   templateUrl: './cascading-oracle.html',
   styleUrls: [
     '../../../styles/_materialIcons.scss',

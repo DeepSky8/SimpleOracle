@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { IOracle, oracleType } from '../../data/oracle.model';
 import { YnOracle } from '../../data/yn-oracle/yn-oracle';
 import { Oracle } from '../oracle/oracle';
@@ -8,6 +8,7 @@ import { InspirationOracle } from '../../data/inspiration-oracle/inspiration-ora
 import { OraclePinService } from '../../data/oracle.service';
 import { Searchbar } from "../searchbar/searchbar";
 import { CascadingOracle } from '../../data/cascading-oracle/cascading-oracle';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 
 @Component({
   selector: 'app-body',
@@ -15,19 +16,30 @@ import { CascadingOracle } from '../../data/cascading-oracle/cascading-oracle';
   templateUrl: './body.html',
   styleUrl: './body.scss'
 })
-export class Body {
+export class Body implements OnInit {
+  readonly activatedRoute = inject(ActivatedRoute)
   oracles: IOracle[] = [];
-  pinLength: number = 0;
+  pinnedLength: number = 0;
 
   constructor(private oraclePinService: OraclePinService) { }
 
   ngOnInit(): void {
-    this.oraclePinService.getOracles().subscribe({
-      next: (oracles) => (this.oracles = oracles)
-    })
-    this.oraclePinService.getPinnedLength().subscribe({
-      next: (length) => (this.pinLength = length)
-    })
+    this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
+
+      const matrixPinned = params.get('pinned');
+
+      const pinnedValue: number[] = matrixPinned ?
+        matrixPinned.split(',').map(entry => parseInt(entry)) :
+        [];
+
+      this.oraclePinService.setPinnedOracles(pinnedValue);
+
+      this.pinnedLength = pinnedValue.length;
+    });
+
+    this.oraclePinService.filteredOracles$.subscribe(
+      (oracles) => (this.oracles = oracles)
+    );
   }
 
   componentSelector(oracle: IOracle): typeof Oracle {
