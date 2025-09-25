@@ -13,7 +13,7 @@ export enum amounts {
 }
 
 export enum storage {
-    local = 'simpleOracleState',
+    local = 'pinnedOracles',
     test = 'localStorageTest'
 }
 

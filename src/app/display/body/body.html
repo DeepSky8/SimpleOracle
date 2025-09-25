@@ -1,11 +1,11 @@
 <div class="wrapper">
-  <app-searchbar />
+  <app-searchbar [renavigate]="renavigateQuery" />
   <ul>
     @for (oracle of oracles; track oracle.iID) {
     <li class="">
       <ng-container *ngComponentOutlet="
             componentSelector(oracle);
-            inputs: {oracle, pinnedLength};
+            inputs: {oracle, renavigate: renavigatePinned};
             " />
     </li>
     }

@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, inject, OnDestroy, OnInit } from '@angular/core';
 import { IOracle, oracleType } from '../../data/oracle.model';
 import { YnOracle } from '../../data/yn-oracle/yn-oracle';
 import { Oracle } from '../oracle/oracle';
@@ -8,7 +8,9 @@ import { InspirationOracle } from '../../data/inspiration-oracle/inspiration-ora
 import { OraclePinService } from '../../data/oracle.service';
 import { Searchbar } from "../searchbar/searchbar";
 import { CascadingOracle } from '../../data/cascading-oracle/cascading-oracle';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { storageToken } from '../../data/library';
+import { map, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-body',
@@ -16,31 +18,147 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
   templateUrl: './body.html',
   styleUrl: './body.scss'
 })
-export class Body implements OnInit {
-  readonly activatedRoute = inject(ActivatedRoute)
-  oracles: IOracle[] = [];
-  pinnedLength: number = 0;
+export class Body implements OnInit, OnDestroy {
+  private readonly router = inject(Router);
+  private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly oraclePinService = inject(OraclePinService);
+  private querySubscription: Subscription | undefined;
+  private paramSubscription: Subscription | undefined;
+  private urlSubscription: Subscription | undefined;
+  pathType: string = '';
+  filterText: string = '';
 
-  constructor(private oraclePinService: OraclePinService) { }
+  oracles: IOracle[] = [];
+  pinnedArray: number[] = [];
+
+  constructor(@Inject(storageToken) private readonly storageLocation: string) {
+    this.renavigatePinned = this.renavigatePinned.bind(this);
+    this.renavigateQuery = this.renavigateQuery.bind(this);
+  }
 
   ngOnInit(): void {
-    this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
 
-      const matrixPinned = params.get('pinned');
+    this.urlSubscription = this.activatedRoute.url
+      .pipe(map((segments) => segments.map((segment) => segment.path)))
+      .subscribe((url) => {
+        const pathRoot = url[0]
+        this.pathType = pathRoot;
+        this.oraclePinService.setOracleCategory(pathRoot)
+      });
 
-      const pinnedValue: number[] = matrixPinned ?
-        matrixPinned.split(',').map(entry => parseInt(entry)) :
+    this.querySubscription = this.activatedRoute.queryParamMap.subscribe((params: ParamMap) => {
+
+      const queryEntry = params.get('filter')
+
+      if (queryEntry) {
+        this.filterText = queryEntry;
+      } else {
+        this.filterText = '';
+      };
+
+    })
+
+    this.paramSubscription = this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
+
+      const matrixPinnedValue = params.get('pinned');
+
+      const matrixParsedValue: number[] = matrixPinnedValue ?
+        matrixPinnedValue.split(',').map(entry => parseInt(entry)) :
         [];
 
-      this.oraclePinService.setPinnedOracles(pinnedValue);
+      const localParsedValue = this.checkLocalStore(this.storageLocation)
 
-      this.pinnedLength = pinnedValue.length;
+      if (matrixParsedValue.length > 0) {
+        this.oraclePinService.setPinnedOracles(matrixParsedValue);
+        this.pinnedArray = matrixParsedValue;
+        this.renavigatePinned(matrixParsedValue);
+
+      } else if (localParsedValue.length > 0) {
+        this.oraclePinService.setPinnedOracles(localParsedValue);
+        this.pinnedArray = localParsedValue;
+        this.renavigatePinned(localParsedValue);
+      } else {
+        this.oraclePinService.setPinnedOracles([]);
+        this.pinnedArray = [];
+        this.renavigatePinned([]);
+      };
     });
+
+
+
 
     this.oraclePinService.filteredOracles$.subscribe(
       (oracles) => (this.oracles = oracles)
     );
+
   }
+
+  ngOnDestroy(): void {
+    this.urlSubscription?.unsubscribe();
+    this.paramSubscription?.unsubscribe();
+    this.querySubscription?.unsubscribe();
+  }
+
+
+  renavigatePinned(pinned: number[]): void {
+
+    if (pinned.length > 0) {
+      this.router.navigate([`../${this.pathType}`, { pinned }], {
+        relativeTo: this.activatedRoute,
+        queryParams:
+          this.filterText.length > 0 ?
+            { filter: this.filterText, } :
+            { filter: null }
+        ,
+        queryParamsHandling: 'merge',
+      })
+    } else {
+      this.router.navigate([`../${this.pathType}`], {
+        relativeTo: this.activatedRoute,
+        queryParams:
+          this.filterText.length > 0 ?
+            { filter: this.filterText, } :
+            { filter: null }
+        ,
+        queryParamsHandling: 'merge',
+      })
+    }
+  }
+
+  renavigateQuery(filterText: string): void {
+
+    if (this.pinnedArray.length > 0) {
+      this.router.navigate([`../${this.pathType}`, { pinned: this.pinnedArray }], {
+        relativeTo: this.activatedRoute,
+        queryParams:
+          filterText.length > 0 ?
+            { filter: filterText, } :
+            { filter: null }
+        ,
+        queryParamsHandling: 'merge',
+      })
+    } else {
+      this.router.navigate([`../${this.pathType}`], {
+        relativeTo: this.activatedRoute,
+        queryParams:
+          filterText.length > 0 ?
+            { filter: filterText, } :
+            { filter: null }
+        ,
+        queryParamsHandling: 'merge',
+      })
+    }
+  }
+
+  private checkLocalStore(location: string): number[] {
+    const found = localStorage.getItem(location)
+    if (found) {
+      return JSON.parse(found)
+    } else {
+      return []
+    }
+  }
+
 
   componentSelector(oracle: IOracle): typeof Oracle {
     switch (oracle!.type) {

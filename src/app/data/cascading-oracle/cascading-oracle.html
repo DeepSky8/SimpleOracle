@@ -1,7 +1,7 @@
 <div class="oracle--wrapper">
     <div class='oracle--topBox'>
         <app-oracle-header [pinned]="pinned" [pinThisOracle]="pinThisOracle" title="{{oracle.title}}"
-            [pinnedLength]="pinnedLength" [upThisOracle]="upThisOracle" [downThisOracle]="downThisOracle" />
+            [pinnedLength]="pinnedArray.length" [upThisOracle]="upThisOracle" [downThisOracle]="downThisOracle" />
 
         <div class="rollResults--wrapper oracle--spacer--tiny">
             @if (rollPrimary>0) {

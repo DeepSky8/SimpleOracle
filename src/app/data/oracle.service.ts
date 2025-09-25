@@ -1,87 +1,26 @@
-import { inject, Inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, of, switchMap } from 'rxjs';
 import { IOracle } from './oracle.model';
 import { oracles } from './oracles';
-// import { storageToken } from './library';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ROUTER_TOKENS } from '../app.routes';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OraclePinService {
-  private readonly activatedRoute = inject(ActivatedRoute)
+  private readonly router = inject(Router);
+  private readonly activatedRoute = inject(ActivatedRoute);
   readonly oracles$ = of(oracles);
-  private pinnedLength: number = 0;
   private readonly filterText = this.activatedRoute.queryParamMap.pipe(
     map((params) => params.get('filter'))
-  )
-
+  );
 
   private readonly oracleCategory = new BehaviorSubject<string>(ROUTER_TOKENS.SIMPLE);
   private readonly oracleCategory$ = this.oracleCategory.asObservable();
 
   private readonly pinnedArray = new BehaviorSubject<number[]>([]);
   private readonly pinnedArray$ = this.pinnedArray.asObservable();
-
-
-  constructor(
-    // @Inject(storageToken) private readonly storageLocation: string,
-  ) {
-    // const retrieved = this.checkLocalStore(storageLocation)
-    // if (retrieved) {
-
-    //   // const unpacked: IOracle[] = this.sortOracles(JSON.parse(retrieved));
-    //   const unpacked: IOracle[] = JSON.parse(retrieved);
-
-    //   // Compare each stored oracle by iID 
-    //   const compared: IOracle[] = unpacked.map(localCopy => {
-    //     const officialCopy = oracles.find(oCopy => oCopy.iID === localCopy.iID)
-    //     if (officialCopy) {
-    //       const matchTitle = officialCopy.title === localCopy.title
-    //       const matchType = officialCopy.type === localCopy.type
-    //       const matchTable = officialCopy.table === localCopy.table
-    //       const matchRollCaps = officialCopy.rollCaps === localCopy.rollCaps
-
-    //       if (matchTitle && matchType && matchTable && matchRollCaps) {
-    //         return localCopy
-    //       } else {
-    //         return { ...officialCopy, currentPosition: localCopy.currentPosition, pinned: localCopy.pinned }
-    //       }
-
-    //     } else {
-    //       return localCopy
-    //     }
-    //   })
-
-    //   const sorted = this.sortOracles(compared)
-    //   this.oracleOrder.next(sorted);
-    //   this.oracleAll = sorted;
-    //   const pinnedOnlyLength = compared.filter(oracle => oracle.pinned).length
-    //   this.pinnedLength.next(pinnedOnlyLength)
-
-    // } else {
-    //   this.oracleOrder.next(oracles);
-    //   this.oracleAll = oracles;
-    // }
-  }
-
-  setOracleCategory(category: string): void {
-    this.oracleCategory.next(category)
-  }
-
-  getOracleCategory(): Observable<string> {
-    return this.oracleCategory$
-  }
-
-  setPinnedOracles(pinnedArray: number[]): void {
-    this.pinnedArray.next(pinnedArray);
-    this.pinnedLength = pinnedArray.length;
-  }
-
-  getPinnedOracles(): Observable<number[]> {
-    return this.pinnedArray$;
-  }
 
   readonly filteredOracles$: Observable<IOracle[]> = this.pinnedArray$.pipe(
     switchMap((pinnedArray) =>
@@ -106,6 +45,29 @@ export class OraclePinService {
       )
     )
   );
+
+  constructor() { }
+
+  setOracleCategory(category: string): void {
+    this.oracleCategory.next(category)
+  }
+
+  getOracleCategory(): Observable<string> {
+    return this.oracleCategory$
+  }
+
+  setPinnedOracles(pinnedArray: number[]): void {
+    if (pinnedArray.length > 0) {
+      localStorage.setItem('pinnedOracles', JSON.stringify(pinnedArray))
+    } else {
+      localStorage.removeItem('pinnedOracles')
+    }
+    this.pinnedArray.next(pinnedArray);
+  }
+
+  getPinnedOracles(): Observable<number[]> {
+    return this.pinnedArray$;
+  }
 
   private filterOraclesAndArray(oracles: IOracle[], type: string, array: number[]): { typeFiltered: IOracle[], arrayFiltered: number[] } {
 
@@ -155,4 +117,5 @@ export class OraclePinService {
 
     }
   }
+
 }
