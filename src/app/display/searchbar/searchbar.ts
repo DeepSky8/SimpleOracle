@@ -24,7 +24,7 @@ export class Searchbar {
 
   onInputChange(event: Event): void {
     const input = event.target as HTMLInputElement;
-    const value = input?.value || '';
+    const value = input?.value.toLowerCase() || '';
     if (this.renavigateQuery) {
       this.renavigateQuery(value);
     };

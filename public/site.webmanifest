@@ -1,8 +1,8 @@
 {
-  "name": "Simple Oracle",
+  "name": "Oracle",
   "short_name": "Oracle",
   "start_url": "/",
-  "description": "A simple oracle for use with solo-RPG games",
+  "description": "An oracle for use with solo-RPG games",
   "id": "oracle.tellstories.xyz",
   "icons": [
     {
