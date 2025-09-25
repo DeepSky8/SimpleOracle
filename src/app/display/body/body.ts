@@ -11,6 +11,7 @@ import { CascadingOracle } from '../../data/cascading-oracle/cascading-oracle';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { storageToken } from '../../data/library';
 import { map, Subscription } from 'rxjs';
+import { ROUTER_TOKENS } from '../../app.routes';
 
 @Component({
   selector: 'app-body',
@@ -34,6 +35,7 @@ export class Body implements OnInit, OnDestroy {
   constructor(@Inject(storageToken) private readonly storageLocation: string) {
     this.renavigatePinned = this.renavigatePinned.bind(this);
     this.renavigateQuery = this.renavigateQuery.bind(this);
+    this.renavigatePathType = this.renavigatePathType.bind(this);
   }
 
   ngOnInit(): void {
@@ -143,6 +145,43 @@ export class Body implements OnInit, OnDestroy {
         queryParams:
           filterText.length > 0 ?
             { filter: filterText, } :
+            { filter: null }
+        ,
+        queryParamsHandling: 'merge',
+      })
+    }
+  }
+
+  private cyclePaths(currentPath: string): string {
+    const paths: string[] = [ROUTER_TOKENS.SIMPLE, ROUTER_TOKENS.ADVANCED, ROUTER_TOKENS.ALL];
+    const currentIndex = paths.indexOf(currentPath);
+    if (currentIndex == paths.length - 1) {
+      return paths[0]
+    } else {
+      return paths[currentIndex + 1]
+    }
+
+  }
+
+  renavigatePathType(): void {
+    const nextPathType = this.cyclePaths(this.pathType);
+
+    if (this.pinnedArray.length > 0) {
+      this.router.navigate([`../${nextPathType}`, { pinned: this.pinnedArray }], {
+        relativeTo: this.activatedRoute,
+        queryParams:
+          this.filterText.length > 0 ?
+            { filter: this.filterText, } :
+            { filter: null }
+        ,
+        queryParamsHandling: 'merge',
+      })
+    } else {
+      this.router.navigate([`../${nextPathType}`], {
+        relativeTo: this.activatedRoute,
+        queryParams:
+          this.filterText.length > 0 ?
+            { filter: this.filterText, } :
             { filter: null }
         ,
         queryParamsHandling: 'merge',

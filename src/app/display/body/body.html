@@ -1,5 +1,8 @@
 <div class="wrapper">
-  <app-searchbar [renavigate]="renavigateQuery" />
+  <app-searchbar
+    [renavigateQuery]="renavigateQuery"
+    [renavigatePathType]="renavigatePathType"
+    [pathType]="pathType" />
   <ul>
     @for (oracle of oracles; track oracle.iID) {
     <li class="">

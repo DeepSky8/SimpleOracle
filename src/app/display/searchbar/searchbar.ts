@@ -1,23 +1,32 @@
+import { TitleCasePipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-searchbar',
-  imports: [FormsModule],
+  imports: [FormsModule, TitleCasePipe],
   templateUrl: './searchbar.html',
   styleUrl: './searchbar.scss'
 })
 export class Searchbar {
   searchText: string = '';
-  @Input() renavigate!: (arg: string) => void;
+  @Input() renavigateQuery!: (arg: string) => void;
+  @Input() renavigatePathType!: () => void;
+  @Input() pathType!: string;
 
   constructor() { }
+
+  cyclePath(): void {
+    if (this.renavigatePathType) {
+      this.renavigatePathType();
+    }
+  }
 
   onInputChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     const value = input?.value || '';
-    if (this.renavigate) {
-      this.renavigate(value);
+    if (this.renavigateQuery) {
+      this.renavigateQuery(value);
     };
 
   }
@@ -25,8 +34,8 @@ export class Searchbar {
   onResetClick(): void {
     this.searchText = '';
 
-    if (this.renavigate) {
-      this.renavigate('');
+    if (this.renavigateQuery) {
+      this.renavigateQuery('');
     };
   }
 
