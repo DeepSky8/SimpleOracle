@@ -1,27 +1,6 @@
 @use "../../../styles/sizes";
 @use "../../../styles/colors";
 
-// input[type="search"]::-webkit-search-cancel-button {
-//     -webkit-appearance: none;
-//     background-image: url("../../../../public/Clear_Search_unfocused.png");
-//     background-size: contain;
-//     background-repeat: no-repeat;
-//     background-position: center;
-//     height: 21px;
-//     width: 20px;
-//     margin-left: 0.4em;
-//     margin-right: 0.4em;
-//     cursor: pointer;
-//     opacity: 0.7;
-//     &:hover {
-//         // opacity: 1;
-//         background-image: url("../../../../public/Clear_Search_resized_hover.png");
-//         background-size: contain;
-//         background-repeat: no-repeat;
-//         background-position: center;
-//     }
-// }
-
 .wrapper {
     display: flex;
     flex-wrap: wrap;
@@ -42,7 +21,7 @@
 
 #oracleSearch {
     width: 100%;
-    // height: 3em;
+    margin-top: 10px;
     font-size: 1.5em;
     background-color: colors.$searchBackgroundUnfocused;
     color: colors.$searchUnfocused;
@@ -64,7 +43,7 @@
     }
 }
 
-#resetSearch {
+button {
     width: 100%;
     margin-top: 10px;
     font-size: 1.5em;
@@ -79,7 +58,7 @@
     padding-right: 15px;
     cursor: pointer;
 }
-#resetSearch:hover {
+button:hover {
     background-color: colors.$searchUnfocused;
     color: colors.$searchBackgroundUnfocused;
 }
@@ -95,10 +74,15 @@
         width: 100%;
     }
 
-    #resetSearch {
-        width: fit-content;
+    #oracleSearch {
         margin-top: 0px;
         margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    button {
+        width: 200px;
+        margin-top: 0px;
         padding-left: 15px;
         padding-right: 15px;
     }

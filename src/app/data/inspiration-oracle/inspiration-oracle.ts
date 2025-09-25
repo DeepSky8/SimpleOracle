@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { Oracle } from '../../display/oracle/oracle';
-import { CommonModule, NgClass } from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { OracleHeader } from "../oracle-header/oracle-header";
 
 @Component({
   selector: 'app-inspiration-oracle',
-  imports: [CommonModule, NgClass],
+  imports: [CommonModule, OracleHeader],
   templateUrl: './inspiration-oracle.html',
   styleUrls: [
     '../../../styles/_materialIcons.scss',

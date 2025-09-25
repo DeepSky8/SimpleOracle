@@ -3,10 +3,11 @@ import { Oracle } from '../../display/oracle/oracle';
 
 import { odds } from '../library';
 import { NgClass } from '@angular/common';
+import { OracleHeader } from "../oracle-header/oracle-header";
 
 @Component({
   selector: 'app-yn-oracle',
-  imports: [NgClass],
+  imports: [OracleHeader],
   templateUrl: './yn-oracle.html',
   styleUrls: [
     '../../../styles/_materialIcons.scss',

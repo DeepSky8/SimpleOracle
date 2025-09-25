@@ -1,6 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { IOracle } from '../../data/oracle.model';
 import { OraclePinService } from '../../data/oracle.service';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-oracle',
@@ -11,16 +13,44 @@ import { OraclePinService } from '../../data/oracle.service';
     '../../../styles/_oracleDefaults.scss',
   ]
 })
-export class Oracle {
+export class Oracle implements OnInit, OnDestroy {
+  readonly router = inject(Router)
+  readonly activatedRoute = inject(ActivatedRoute)
+  private querySubscription: Subscription | undefined;
   @Input() oracle!: IOracle;
-  @Input() pinLength!: number;
-  position: number = 0;
+  @Input() renavigate!: (arg: number[]) => void;
+  pinnedArray: number[] = [];
   pinned: boolean = false;
+  filterText: string = '';
 
-  constructor(private oraclePinService: OraclePinService) { };
+  constructor(private oraclePinService: OraclePinService) {
+    this.pinThisOracle = this.pinThisOracle.bind(this)
+    this.upThisOracle = this.upThisOracle.bind(this)
+    this.downThisOracle = this.downThisOracle.bind(this)
+  };
 
   ngOnInit() {
-    this.pinned = this.oracle.pinned
+    this.oraclePinService.getPinnedOracles().subscribe(pinnedOracles => {
+      this.pinnedArray = pinnedOracles
+      this.pinned = pinnedOracles.includes(this.oracle.iID);
+    });
+
+
+    this.querySubscription = this.activatedRoute.queryParamMap.subscribe((params: ParamMap) => {
+
+      const queryEntry = params.get('filter')
+
+      if (queryEntry) {
+        this.filterText = queryEntry;
+      } else {
+        this.filterText = '';
+      };
+
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.querySubscription?.unsubscribe();
   }
 
   generateRoll(maxRoll: number, currentRoll: number): number {
@@ -35,16 +65,61 @@ export class Oracle {
   rollDice(parameter?: string): void { }
 
   pinThisOracle(): void {
-    this.oraclePinService.pin(this.oracle.iID);
-    this.pinned = !this.pinned;
+    const updatedPins: number[] = this.pinned ?
+      this.pinnedArray.filter(pinnedID => pinnedID !== this.oracle.iID) :
+      this.pinnedArray.length > 0 ?
+        this.pinnedArray.concat(this.oracle.iID) :
+        [this.oracle.iID];
+
+    this.oraclePinService.setPinnedOracles(updatedPins);
+
+    if (this.renavigate) {
+      this.renavigate(updatedPins);
+    }
   }
 
   upThisOracle(): void {
-    this.oraclePinService.moveUp(this.oracle.iID)
+    let updatedPins: number[];
+
+    const targetIndex = this.pinnedArray.findIndex(oracleID => this.oracle.iID === oracleID)
+    const targetItem = this.pinnedArray.slice(targetIndex, targetIndex + 1)
+    if (targetIndex > 0) {
+      updatedPins = this.pinnedArray
+        .toSpliced(targetIndex, 1)
+        .toSpliced(targetIndex - 1, 0, targetItem[0])
+    } else {
+      updatedPins = this.pinnedArray
+        .toSpliced(targetIndex, 1)
+        .toSpliced(this.pinnedArray.length - 1, 0, targetItem[0])
+    }
+
+    if (this.renavigate) {
+      this.renavigate(updatedPins);
+    }
+
   }
 
   downThisOracle(): void {
-    this.oraclePinService.moveDown(this.oracle.iID)
+    let updatedPins: number[];
+
+    const targetIndex = this.pinnedArray.findIndex(oracleID => this.oracle.iID === oracleID)
+    const targetItem = this.pinnedArray.slice(targetIndex, targetIndex + 1)
+    if (targetIndex < this.pinnedArray.length - 1) {
+      updatedPins = this.pinnedArray
+        .toSpliced(targetIndex + 2, 0, targetItem[0])
+        .toSpliced(targetIndex, 1)
+
+    } else {
+      updatedPins = this.pinnedArray
+        .toSpliced(targetIndex, 1)
+        .toSpliced(0, 0, targetItem[0])
+
+    }
+
+    if (this.renavigate) {
+      this.renavigate(updatedPins);
+    }
+
   }
 
 }

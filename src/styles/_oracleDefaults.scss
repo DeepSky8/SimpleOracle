@@ -69,38 +69,6 @@ button:hover {
     padding-bottom: sizes.$m-size;
 }
 
-.oracle--title--wrapper {
-    display: flex;
-    height: 74px;
-}
-
-.oracle--title--width {
-    width: 80%;
-}
-
-.oracle--pin--width {
-    width: 10%;
-}
-
-.oracle--pin--height {
-    height: 37px;
-}
-
-.oracle--pin--button {
-    font-family: "Material Symbols Outlined";
-    font-size: larger;
-    border: 0;
-    margin: auto;
-    padding: auto;
-    border-radius: 0;
-    box-shadow: none;
-}
-
-.oracle--pin--button:hover {
-    background-color: color.adjust(colors.$oracleBackground, $lightness: -3%);
-    box-shadow: none;
-}
-
 @media only screen and (min-device-width: sizes.$medium-breakpoint) {
     .oracle--wrapper {
         height: 650px;

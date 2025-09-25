@@ -1,0 +1,34 @@
+@use "sass:color";
+@use "../../../styles/colors";
+
+.oracle--title--wrapper {
+    display: flex;
+    height: 74px;
+}
+
+.oracle--title--width {
+    width: 80%;
+}
+
+.oracle--pin--width {
+    width: 10%;
+}
+
+.oracle--pin--height {
+    height: 37px;
+}
+
+.oracle--pin--button {
+    font-family: "Material Symbols Outlined";
+    font-size: larger;
+    border: 0;
+    margin: auto;
+    padding: auto;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.oracle--pin--button:hover {
+    background-color: color.adjust(colors.$oracleBackground, $lightness: -3%);
+    box-shadow: none;
+}
