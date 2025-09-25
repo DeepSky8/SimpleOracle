@@ -19,6 +19,11 @@ li {
     width: 100%;
 }
 
+#noMatches {
+    text-align: center;
+    font-size: sizes.$calcFontSizeMed;
+}
+
 @media only screen and (min-device-width: sizes.$tablet-breakpoint) {
     ul {
         justify-content: space-evenly;

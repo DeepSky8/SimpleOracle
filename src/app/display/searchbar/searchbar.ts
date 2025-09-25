@@ -1,6 +1,8 @@
 import { TitleCasePipe } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-searchbar',
@@ -8,13 +10,31 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './searchbar.html',
   styleUrl: './searchbar.scss'
 })
-export class Searchbar {
-  searchText: string = '';
+export class Searchbar implements OnInit, OnDestroy {
+  private readonly activatedRoute = inject(ActivatedRoute);
+  filterText: string = '';
   @Input() renavigateQuery!: (arg: string) => void;
   @Input() renavigatePathType!: () => void;
   @Input() pathType!: string;
+  querySubscription: Subscription | undefined;
 
   constructor() { }
+
+  ngOnInit(): void {
+    this.querySubscription = this.activatedRoute.queryParamMap.subscribe((params: ParamMap) => {
+
+      const queryEntry = params.get('filter')
+
+      if (queryEntry) {
+        this.filterText = queryEntry.toLowerCase();
+      };
+
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.querySubscription?.unsubscribe();
+  }
 
   cyclePath(): void {
     if (this.renavigatePathType) {
@@ -32,7 +52,7 @@ export class Searchbar {
   }
 
   onResetClick(): void {
-    this.searchText = '';
+    this.filterText = '';
 
     if (this.renavigateQuery) {
       this.renavigateQuery('');
