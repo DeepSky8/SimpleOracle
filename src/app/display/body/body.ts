@@ -9,9 +9,9 @@ import { OraclePinService } from '../../data/oracle.service';
 import { Searchbar } from "../searchbar/searchbar";
 import { CascadingOracle } from '../../data/cascading-oracle/cascading-oracle';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { storageToken } from '../../data/library';
+import { storage, storageToken } from '../../data/library';
 import { map, Subscription } from 'rxjs';
-import { ROUTER_TOKENS } from '../../app.routes';
+import { ROUTER_TOKENS } from '../../app.routes.constant';
 
 @Component({
   selector: 'app-body',
@@ -32,7 +32,8 @@ export class Body implements OnInit, OnDestroy {
   oracles: IOracle[] = [];
   pinnedArray: number[] = [];
 
-  constructor(@Inject(storageToken) private readonly storageLocation: string) {
+  // @Inject(storageToken) private readonly storageLocation: string
+  constructor() {
     this.renavigatePinned = this.renavigatePinned.bind(this);
     this.renavigateQuery = this.renavigateQuery.bind(this);
     this.renavigatePathType = this.renavigatePathType.bind(this);
@@ -49,7 +50,6 @@ export class Body implements OnInit, OnDestroy {
       });
 
     this.querySubscription = this.activatedRoute.queryParamMap.subscribe((params: ParamMap) => {
-
       const queryEntry = params.get('filter')
 
       if (queryEntry) {
@@ -61,14 +61,14 @@ export class Body implements OnInit, OnDestroy {
     })
 
     this.paramSubscription = this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
-
       const matrixPinnedValue = params.get('pinned');
 
       const matrixParsedValue: number[] = matrixPinnedValue ?
         matrixPinnedValue.split(',').map(entry => parseInt(entry)) :
         [];
 
-      const localParsedValue = this.checkLocalStore(this.storageLocation)
+      // this.storageLocation
+      const localParsedValue = this.checkLocalStore(storage.local)
 
       if (matrixParsedValue.length > 0) {
         this.oraclePinService.setPinnedOracles(matrixParsedValue);
@@ -90,7 +90,10 @@ export class Body implements OnInit, OnDestroy {
 
 
     this.oraclePinService.filteredOracles$.subscribe(
-      (oracles) => (this.oracles = oracles)
+
+      (oracles) => {
+        (this.oracles = oracles)
+      }
     );
 
   }

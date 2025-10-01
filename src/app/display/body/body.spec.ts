@@ -2,12 +2,14 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Body } from './body';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { By } from '@angular/platform-browser';
-import { oracles } from '../../data/oracles';
 import { OraclePinService } from '../../data/oracle.service';
-import { of } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { IOracle, oracleType } from '../../data/oracle.model';
 import { storageToken, testLocation } from '../../data/library';
+import { ActivatedRoute, convertToParamMap, ParamMap, provideRouter, UrlSegment } from '@angular/router';
+import { ROUTER_TOKENS } from '../../app.routes.constant';
+import { provideLocationMocks } from '@angular/common/testing';
+import { By } from '@angular/platform-browser';
 
 describe('Body', () => {
   let component: Body;
@@ -331,10 +333,97 @@ describe('Body', () => {
         rollSevenMax: 0,
       },
     },
+    {
+      iID: 3,
+      title: "Cascading",
+      type: oracleType.cascading,
+      defaultPosition: 3,
+      currentPosition: 3,
+      pinned: false,
+      table: [
+        // Row Zero
+        [
+          [
+            // Entry Zero - only displayed during intro
+            "Attempt task with a 'Yes/No' question",
+            "Ask a skill-based question",
+            "Evaluate the likelihood",
+          ],
+          [
+            // Entry One
+            'No',
+            "You fail, possibly due to lack of skill",
+            "It may be impossible/not exist"
+          ],
+          [
+            // Entry Two
+            'Yes',
+            "You succeed",
+            "Proceed to ask a world/narrative-based question"
+          ],
+        ],
+        // Row One
+        [
+          [
+            '' // Never displayed
+            // "Ask a world/narrative-based question 'Yes/No' question",
+            // "Evaluate the likelihood",
+            // "Tap here to roll"
+          ],
+          [
+            // Entry One
+            'No',
+            "You fail",
+            "Success may not have been possible"
+          ],
+          [
+            // Entry Two
+            'Yes',
+            "Now roll on tables or use narrative",
+            "Search 'Cascading' to display several tables suitable for results"
+          ],
+
+        ],
+
+      ],
+      tags: ['complex', 'yes', 'no', 'yes/no', 'cascading'],
+      rollCaps: {
+        rollOneMax: 2, // All rolls for this oracle are capped at 2
+        rollTwoMax: 0,
+        rollThreeMax: 0,
+        rollFourMax: 0,
+        rollFiveMax: 0,
+        rollSixMax: 0,
+        rollSevenMax: 0,
+      },
+    },
   ]
 
   beforeEach(async () => {
-    mockOracleService = jasmine.createSpyObj('OraclePinService', ['getOracles', 'getPinnedLength'])
+    mockOracleService = jasmine.createSpyObj(
+      'OraclePinService',
+      ['setOracleCategory', 'setPinnedOracles', 'getPinnedOracles'],
+      {
+        filteredOracles$: of(testOracles)
+        // , getPinnedOracles: of([])
+      }
+    )
+
+    const mockUrlSubject = new BehaviorSubject<UrlSegment[]>([
+      new UrlSegment(ROUTER_TOKENS.SIMPLE, {})
+    ]);
+    const mockParamMapSubject = new BehaviorSubject<ParamMap>(convertToParamMap({}));
+    const mockQueryParamMapSubject = new BehaviorSubject<ParamMap>(convertToParamMap({}));
+
+    const mockActivatedRoute = {
+      url: mockUrlSubject.asObservable(),
+      paramMap: mockParamMapSubject.asObservable(),
+      queryParamMap: mockQueryParamMapSubject.asObservable(),
+      snapshot: {
+        paramMap: mockParamMapSubject.getValue(),
+        queryParamMap: mockQueryParamMapSubject.getValue()
+      }
+    };
 
 
     await TestBed.configureTestingModule({
@@ -342,16 +431,42 @@ describe('Body', () => {
       providers: [
         provideZonelessChangeDetection(),
         { provide: storageToken, useValue: testLocation },
-        { provide: OraclePinService, useValue: mockOracleService }
-
+        { provide: OraclePinService, useValue: mockOracleService },
+        provideLocationMocks(),
+        provideRouter([
+          {
+            path: '',
+            redirectTo: ROUTER_TOKENS.SIMPLE,
+            pathMatch: 'full',
+          },
+          {
+            path: ROUTER_TOKENS.SIMPLE,
+            component: Body,
+          },
+          {
+            path: ROUTER_TOKENS.ADVANCED,
+            component: Body,
+          },
+          {
+            path: ROUTER_TOKENS.ALL,
+            component: Body,
+          },
+          {
+            path: '**',
+            redirectTo: ROUTER_TOKENS.SIMPLE
+          }]),
+        {
+          provide: ActivatedRoute,
+          useValue: mockActivatedRoute
+        },
       ]
     })
       .compileComponents();
 
     fixture = TestBed.createComponent(Body);
-    component = fixture.componentInstance; 
-    mockOracleService.getOracles.and.returnValue(of(testOracles))
-    mockOracleService.getPinnedLength.and.returnValue(of(1))
+    component = fixture.componentInstance;
+
+    mockOracleService.getPinnedOracles.and.returnValue(of([]));
 
     fixture.detectChanges();
   });
@@ -363,6 +478,6 @@ describe('Body', () => {
   it(`should produce a list item for each oracle in oracles.ts`, () => {
     const listItemCount = fixture.debugElement.queryAll(By.css('li')).length
 
-    expect(listItemCount).toEqual(oracles.length)
+    expect(listItemCount).toEqual(4)
   })
 });

@@ -30,7 +30,7 @@ export class Oracle implements OnInit, OnDestroy {
   };
 
   ngOnInit() {
-    this.oraclePinService.getPinnedOracles().subscribe(pinnedOracles => {
+    this.oraclePinService.getPinnedOracles().subscribe((pinnedOracles: number[]) => {
       this.pinnedArray = pinnedOracles
       this.pinned = pinnedOracles.includes(this.oracle.iID);
     });

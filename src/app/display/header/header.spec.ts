@@ -22,7 +22,7 @@ describe('Header', () => {
 
   it('should create text', () => {
     expect(component).toBeTruthy();
-    expect(fixture.debugElement.query(By.css('h1')).nativeElement.textContent).toContain('Simple Oracle');
+    expect(fixture.debugElement.query(By.css('h1')).nativeElement.textContent).toContain('Oracles');
     expect(fixture.debugElement.query(By.css('h3')).nativeElement.textContent).toContain('for solo-RPGs')
   });
 });

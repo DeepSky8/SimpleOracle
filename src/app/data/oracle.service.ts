@@ -2,14 +2,14 @@ import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, of, switchMap } from 'rxjs';
 import { IOracle } from './oracle.model';
 import { oracles } from './oracles';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ROUTER_TOKENS } from '../app.routes';
+import { ActivatedRoute } from '@angular/router';
+import { ROUTER_TOKENS } from '../app.routes.constant';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OraclePinService {
-  private readonly router = inject(Router);
+  // private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
   readonly oracles$ = of(oracles);
   private readonly filterText = this.activatedRoute.queryParamMap.pipe(

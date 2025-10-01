@@ -1,13 +1,13 @@
 import { Routes } from '@angular/router';
 import { Body } from './display/body/body';
+import { ROUTER_TOKENS } from './app.routes.constant';
+// export enum ROUTER_TOKENS {
+//     SIMPLE = 'simple',
+//     ADVANCED = 'complex',
+//     ALL = 'all',
+//     LOGIN = 'login',
 
-export enum ROUTER_TOKENS {
-    SIMPLE = 'simple',
-    ADVANCED = 'complex',
-    ALL = 'all',
-    LOGIN = 'login',
-
-}
+// }
 
 export const routes: Routes = [
     {
