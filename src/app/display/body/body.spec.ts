@@ -403,14 +403,11 @@ describe('Body', () => {
     mockOracleService = jasmine.createSpyObj(
       'OraclePinService',
       ['setOracleCategory', 'setPinnedOracles', 'getPinnedOracles'],
-      {
-        filteredOracles$: of(testOracles)
-        // , getPinnedOracles: of([])
-      }
+      { filteredOracles$: of(testOracles) }
     )
 
     const mockUrlSubject = new BehaviorSubject<UrlSegment[]>([
-      new UrlSegment(ROUTER_TOKENS.SIMPLE, {})
+      new UrlSegment(ROUTER_TOKENS.ALL, {})
     ]);
     const mockParamMapSubject = new BehaviorSubject<ParamMap>(convertToParamMap({}));
     const mockQueryParamMapSubject = new BehaviorSubject<ParamMap>(convertToParamMap({}));
