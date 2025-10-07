@@ -12,7 +12,6 @@ import { ROUTER_TOKENS } from '../../app.routes.constant';
 describe('Oracle', () => {
   let component: Oracle;
   let fixture: ComponentFixture<Oracle>;
-  let mockOracleService;
   const testOracles: IOracle[] = [
     {
       iID: 0,

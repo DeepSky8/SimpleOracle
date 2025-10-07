@@ -7,11 +7,14 @@ import { oracles } from '../oracles';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { amounts, storageToken, testLocation } from '../library';
 import { OraclePinService } from '../oracle.service';
+import { BehaviorSubject, of } from 'rxjs';
+import { ActivatedRoute, convertToParamMap, ParamMap, UrlSegment } from '@angular/router';
+import { ROUTER_TOKENS } from '../../app.routes.constant';
 
 describe('HowOracle', () => {
   let component: HowOracle;
   let fixture: ComponentFixture<HowOracle>;
-  let mockOracleService = jasmine.createSpyObj('OraclePinService', ['getOracles', 'getPinnedLength']);
+  // let mockOracleService = jasmine.createSpyObj('OraclePinService', ['getOracles', 'getPinnedLength']);
   const testOracles: IOracle[] = [
     {
       iID: 0,
@@ -333,6 +336,31 @@ describe('HowOracle', () => {
   ]
 
   beforeEach(async () => {
+    let mockOracleService = jasmine.createSpyObj(
+      'OraclePinService',
+      ['pin', 'moveUp', 'moveDown', 'getOracles', 'getPinnedLength', 'getPinnedOracles'],
+      { filteredOracles$: of(testOracles) }
+    );
+
+    const mockUrlSubject = new BehaviorSubject<UrlSegment[]>([
+      new UrlSegment(ROUTER_TOKENS.ALL, {})
+    ]);
+    const mockParamMapSubject = new BehaviorSubject<ParamMap>(convertToParamMap({}));
+    const mockQueryParamMapSubject = new BehaviorSubject<ParamMap>(convertToParamMap({}));
+
+    const mockActivatedRoute = {
+      url: mockUrlSubject.asObservable(),
+      paramMap: mockParamMapSubject.asObservable(),
+      queryParamMap: mockQueryParamMapSubject.asObservable(),
+      snapshot: {
+        paramMap: mockParamMapSubject.getValue(),
+        queryParamMap: mockQueryParamMapSubject.getValue()
+      }
+    };
+
+    mockOracleService.getPinnedOracles.and.returnValue(of([]));
+
+
     await TestBed.configureTestingModule({
       imports: [HowOracle],
       providers:
@@ -340,6 +368,7 @@ describe('HowOracle', () => {
           provideZonelessChangeDetection(),
           { provide: storageToken, useValue: testLocation },
           { provide: OraclePinService, useValue: mockOracleService },
+          { provide: ActivatedRoute, useValue: mockActivatedRoute }
         ]
     })
       .compileComponents();
