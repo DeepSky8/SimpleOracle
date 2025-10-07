@@ -10,11 +10,16 @@ import { ActivatedRoute, convertToParamMap, ParamMap, provideRouter, UrlSegment 
 import { ROUTER_TOKENS } from '../../app.routes.constant';
 import { provideLocationMocks } from '@angular/common/testing';
 import { By } from '@angular/platform-browser';
+import { RouterTestingHarness } from '@angular/router/testing';
+import { Location } from '@angular/common';
+import { Searchbar } from '../searchbar/searchbar';
 
 describe('Body', () => {
   let component: Body;
   let fixture: ComponentFixture<Body>;
   let mockOracleService;
+  let harness: RouterTestingHarness;
+  let location: Location;
   const testOracles: IOracle[] = [
     {
       iID: 0,
@@ -422,6 +427,7 @@ describe('Body', () => {
       }
     };
 
+    mockOracleService.getPinnedOracles.and.returnValue(of([]));
 
     await TestBed.configureTestingModule({
       imports: [Body],
@@ -460,10 +466,11 @@ describe('Body', () => {
     })
       .compileComponents();
 
+    harness = await RouterTestingHarness.create(`/${ROUTER_TOKENS.SIMPLE}`);
+
     fixture = TestBed.createComponent(Body);
     component = fixture.componentInstance;
-
-    mockOracleService.getPinnedOracles.and.returnValue(of([]));
+    location = TestBed.inject(Location);
 
     fixture.detectChanges();
   });
@@ -476,5 +483,40 @@ describe('Body', () => {
     const listItemCount = fixture.debugElement.queryAll(By.css('li')).length
 
     expect(listItemCount).toEqual(4)
-  })
+  });
+
+  it(`should advance URL route when cyclePaths is called`, () => {
+    const advanceSimple = component['cyclePaths'](ROUTER_TOKENS.SIMPLE)
+    const advanceComplex = component['cyclePaths'](ROUTER_TOKENS.ADVANCED)
+    const advanceAll = component['cyclePaths'](ROUTER_TOKENS.ALL)
+
+    expect(advanceSimple).toEqual(ROUTER_TOKENS.ADVANCED)
+    expect(advanceComplex).toEqual(ROUTER_TOKENS.ALL)
+    expect(advanceAll).toEqual(ROUTER_TOKENS.SIMPLE)
+  });
+
+  it(`should navigate to reflect Pinned`, async () => {
+
+    await fixture.ngZone?.run(() => {
+      component.renavigatePinned([0, 1]);
+    })
+
+    await harness.navigateByUrl(`/${ROUTER_TOKENS.SIMPLE};pinned=0,1`)
+    fixture.detectChanges();
+
+    expect(location.path()).toBe(`/${ROUTER_TOKENS.SIMPLE};pinned=0,1`)
+  });
+
+  // it(`should navigate to reflect Query`, async () => {
+
+  //   await fixture.ngZone?.run(() => {
+  //     component.renavigateQuery('a');
+  //   })
+  //   await harness.navigateByUrl(`/${ROUTER_TOKENS.SIMPLE}?filter=a`)
+  //   fixture.detectChanges();
+
+  //   expect(location.path()).toBe(`/${ROUTER_TOKENS.SIMPLE}?filter=a`)
+  // });
+
+
 });
