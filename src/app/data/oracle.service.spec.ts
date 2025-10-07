@@ -5,6 +5,9 @@ import { oracles } from './oracles';
 import { IOracle, oracleType } from './oracle.model';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { storageToken, testLocation } from './library';
+import { BehaviorSubject, of } from 'rxjs';
+import { ROUTER_TOKENS } from '../app.routes.constant';
+import { ActivatedRoute, convertToParamMap, ParamMap, UrlSegment } from '@angular/router';
 
 describe('Oracle Pin Service', () => {
   let service: OraclePinService;
@@ -332,10 +335,35 @@ describe('Oracle Pin Service', () => {
 
 
   beforeEach(async () => {
+    let mockOracleService = jasmine.createSpyObj(
+      'OraclePinService',
+      ['pin', 'moveUp', 'moveDown', 'getOracles', 'getPinnedLength', 'getPinnedOracles'],
+      { filteredOracles$: of(testOracles) }
+    );
+
+    const mockUrlSubject = new BehaviorSubject<UrlSegment[]>([
+      new UrlSegment(ROUTER_TOKENS.ALL, {})
+    ]);
+    const mockParamMapSubject = new BehaviorSubject<ParamMap>(convertToParamMap({}));
+    const mockQueryParamMapSubject = new BehaviorSubject<ParamMap>(convertToParamMap({}));
+
+    const mockActivatedRoute = {
+      url: mockUrlSubject.asObservable(),
+      paramMap: mockParamMapSubject.asObservable(),
+      queryParamMap: mockQueryParamMapSubject.asObservable(),
+      snapshot: {
+        paramMap: mockParamMapSubject.getValue(),
+        queryParamMap: mockQueryParamMapSubject.getValue()
+      }
+    };
+
+    mockOracleService.getPinnedOracles.and.returnValue(of([]));
+
     await TestBed.configureTestingModule({
       providers: [
         provideZonelessChangeDetection(),
-        { provide: storageToken, useValue: testLocation }
+        { provide: storageToken, useValue: testLocation },
+        { provide: ActivatedRoute, useValue: mockActivatedRoute }
       ]
     })
       .compileComponents();
