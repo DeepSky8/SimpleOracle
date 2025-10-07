@@ -5,11 +5,14 @@ import { provideZonelessChangeDetection } from '@angular/core';
 import { OraclePinService } from '../../data/oracle.service';
 import { IOracle, oracleType } from '../../data/oracle.model';
 import { storageToken, testLocation } from '../../data/library';
+import { BehaviorSubject, of } from 'rxjs';
+import { ActivatedRoute, convertToParamMap, ParamMap, UrlSegment } from '@angular/router';
+import { ROUTER_TOKENS } from '../../app.routes.constant';
 
 describe('Oracle', () => {
   let component: Oracle;
   let fixture: ComponentFixture<Oracle>;
-  let mockService;
+  let mockOracleService;
   const testOracles: IOracle[] = [
     {
       iID: 0,
@@ -331,14 +334,38 @@ describe('Oracle', () => {
   ]
 
   beforeEach(async () => {
-    mockService = jasmine.createSpyObj('OraclePinService', ['pin', 'moveUp', 'moveDown'])
+    let mockOracleService = jasmine.createSpyObj(
+      'OraclePinService',
+      ['pin', 'moveUp', 'moveDown', 'getOracles', 'getPinnedLength', 'getPinnedOracles'],
+      { filteredOracles$: of(testOracles) }
+    );
+
+    const mockUrlSubject = new BehaviorSubject<UrlSegment[]>([
+      new UrlSegment(ROUTER_TOKENS.ALL, {})
+    ]);
+    const mockParamMapSubject = new BehaviorSubject<ParamMap>(convertToParamMap({}));
+    const mockQueryParamMapSubject = new BehaviorSubject<ParamMap>(convertToParamMap({}));
+
+    const mockActivatedRoute = {
+      url: mockUrlSubject.asObservable(),
+      paramMap: mockParamMapSubject.asObservable(),
+      queryParamMap: mockQueryParamMapSubject.asObservable(),
+      snapshot: {
+        paramMap: mockParamMapSubject.getValue(),
+        queryParamMap: mockQueryParamMapSubject.getValue()
+      }
+    };
+
+    mockOracleService.getPinnedOracles.and.returnValue(of([]));
 
     await TestBed.configureTestingModule({
       imports: [Oracle],
       providers: [
         provideZonelessChangeDetection(),
         { provide: storageToken, useValue: testLocation },
-        { provide: OraclePinService, useValue: mockService }
+        { provide: OraclePinService, useValue: mockOracleService },
+        { provide: ActivatedRoute, useValue: mockActivatedRoute }
+
       ]
     })
       .compileComponents();
