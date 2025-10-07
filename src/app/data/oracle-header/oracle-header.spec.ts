@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OracleHeader } from './oracle-header';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('OracleHeader', () => {
   let component: OracleHeader;
@@ -8,9 +9,12 @@ describe('OracleHeader', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OracleHeader]
+      imports: [OracleHeader],
+      providers: [
+        provideZonelessChangeDetection(),
+      ],
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(OracleHeader);
     component = fixture.componentInstance;
