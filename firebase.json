@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/SimpleOracle/browser",
+    "public": "dist/ShuffleChars/browser",
     "ignore": [
       "firebase.json",
       "**/.*",
